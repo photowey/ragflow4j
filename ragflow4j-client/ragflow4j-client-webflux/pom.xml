@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.photowey</groupId>
+        <artifactId>ragflow4j-client</artifactId>
+        <version>${reversion}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>ragflow4j-client-webflux</artifactId>
+    <name>ragflow4j-client-webflux</name>
+    <description>ragflow4j-client-webflux</description>
+
+    <modules>
+    </modules>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.photowey</groupId>
+            <artifactId>ragflow4j-client-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+        </plugins>
+    </build>
+
+</project>
