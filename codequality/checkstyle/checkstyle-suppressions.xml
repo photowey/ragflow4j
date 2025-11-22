@@ -7,6 +7,11 @@
     <suppress files="[\\/].*(package-info)\.java" checks="RegexpOnFilename"/>
 
     <suppress files=".*[\\/]enums([\\/])?.*" checks="NoWhitespaceBefore"/>
+    <suppress files=".*[\\/]enums([\\/])?.*" checks="AtclauseOrder"/>
+    <suppress files=".*[\\/]enums([\\/])?.*" checks="JavadocParagraph"/>
+    <suppress files=".*[\\/]enums([\\/])?.*" checks="JavadocTagContinuationIndentation"/>
+    <suppress files=".*[\\/]enums([\\/])?.*" checks="LineLength"/>
+
     <suppress files=".*[\\/]constant([\\/])?.*" checks="InterfaceIsType"/>
 </suppressions>
 
