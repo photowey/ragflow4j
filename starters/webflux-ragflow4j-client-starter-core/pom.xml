@@ -11,9 +11,9 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>webflux-ragflow4j-client-spring-boot-starter</artifactId>
-    <name>webflux-ragflow4j-client-spring-boot-starter</name>
-    <description>webflux-ragflow4j-client-spring-boot-starter</description>
+    <artifactId>webflux-ragflow4j-client-starter-core</artifactId>
+    <name>webflux-ragflow4j-client-starter-core</name>
+    <description>webflux-ragflow4j-client-starter-core</description>
 
     <modules>
     </modules>
@@ -24,11 +24,13 @@
     <dependencies>
         <dependency>
             <groupId>io.github.photowey</groupId>
-            <artifactId>ragflow4j-client-webflux</artifactId>
+            <artifactId>ragflow4j-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>io.github.photowey</groupId>
-            <artifactId>webflux-ragflow4j-client-starter-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

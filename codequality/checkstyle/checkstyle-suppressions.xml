@@ -12,6 +12,11 @@
     <suppress files=".*[\\/]enums([\\/])?.*" checks="JavadocTagContinuationIndentation"/>
     <suppress files=".*[\\/]enums([\\/])?.*" checks="LineLength"/>
 
+    <suppress files=".*[\\/]client([\\/])?.*" checks="AtclauseOrder"/>
+    <suppress files=".*[\\/]client([\\/])?.*" checks="JavadocParagraph"/>
+    <suppress files=".*[\\/]client([\\/])?.*" checks="JavadocTagContinuationIndentation"/>
+    <suppress files=".*[\\/]client([\\/])?.*" checks="LineLength"/>
+
     <suppress files=".*[\\/]constant([\\/])?.*" checks="InterfaceIsType"/>
 </suppressions>
 

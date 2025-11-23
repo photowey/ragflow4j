@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025-present photowey<photowey@gmail.com> All rights reserved.
+ * Copyright (c) 2025-present The Ragflow4j Authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.Optional;
  * {@code RAGFlowDictionary}.
  *
  * @author weichangjun
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @since 2025/11/22
  */
 public enum RAGFlowDictionary {
@@ -96,6 +96,67 @@ public enum RAGFlowDictionary {
             }
 
             return Optional.empty();
+        }
+    }
+
+    // ----------------------------------------------------------------
+
+    /**
+     * <pre>
+     * The chunking method of the dataset to create. Available options:
+     *
+     * - `"naive"`: General (default)
+     * - `"book"`: Book
+     * - `"email"`: Email
+     * - `"laws"`: Laws
+     * - `"manual"`: Manual
+     * - `"one"`: One
+     * - `"paper"`: Paper
+     * - `"picture"`: Picture
+     * - `"presentation"`: Presentation
+     * - `"qa"`: Q&A
+     * - `"table"`: Table
+     * - `"tag"`: Tag
+     * </pre>
+     */
+    public enum ChunkMethod {
+
+        //
+
+        GENERAL("General", "naive", 1),
+        BOOK("Book", "book", 0),
+        EMAIL("Email", "email", 0),
+        MANUAL("Manual", "manual", 0),
+        ONE("One", "one", 0),
+        PAPER("Paper", "paper", 0),
+        PICTURE("Picture", "picture", 0),
+        PRESENTATION("Presentation", "presentation", 0),
+        QA("Q&A", "qa", 0),
+        TABLE("Table", "table", 0),
+        TAG("Tag", "tag", 0),
+
+        ;
+
+        private final String description;
+        private final String code;
+        private final int defaulted;
+
+        ChunkMethod(String description, String code, int defaulted) {
+            this.description = description;
+            this.code = code;
+            this.defaulted = defaulted;
+        }
+
+        public String description() {
+            return description;
+        }
+
+        public String code() {
+            return code;
+        }
+
+        public int defaulted() {
+            return defaulted;
         }
     }
 
