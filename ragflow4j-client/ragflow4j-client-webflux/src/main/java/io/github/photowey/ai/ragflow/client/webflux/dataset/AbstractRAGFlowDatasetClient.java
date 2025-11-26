@@ -34,7 +34,7 @@ import reactor.core.publisher.Mono;
  * {@code AbstractRAGFlowDatasetClient}.
  *
  * @author photowey
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @since 2025/11/23
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
