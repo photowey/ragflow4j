@@ -21,7 +21,7 @@ import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
 /**
  * {@code RAGFlowDatasetClient}.
  *
- * @author weichangjun
+ * @author photowey
  * @version 2025.0.22.0.1
  * @since 2025/11/23
  */

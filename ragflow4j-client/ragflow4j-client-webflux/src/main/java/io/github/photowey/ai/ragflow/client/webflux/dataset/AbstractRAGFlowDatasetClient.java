@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
 /**
  * {@code AbstractRAGFlowDatasetClient}.
  *
- * @author weichangjun
+ * @author photowey
  * @version 1.0.0
  * @since 2025/11/23
  */

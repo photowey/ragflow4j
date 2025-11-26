@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 /**
  * {@code Graphrag}.
  *
- * @author weichangjun
+ * @author photowey
  * @version 2025.0.22.0.1
  * @since 2025/11/22
  */
