@@ -28,58 +28,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Create dataset.
- *
- * <pre>
- * {
- *     "code": 0,
- *     "data": {
- *         "avatar": null,
- *         "chunk_count": 0,
- *         "chunk_method": "naive",
- *         "create_date": "Mon, 28 Apr 2025 18:40:41 GMT",
- *         "create_time": 1745836841611,
- *         "created_by": "3af81804241d11f0a6a79f24fc270c7f",
- *         "description": null,
- *         "document_count": 0,
- *         "embedding_model": "BAAI/bge-large-zh-v1.5@BAAI",
- *         "id": "3b4de7d4241d11f0a6a79f24fc270c7f",
- *         "language": "English",
- *         "name": "RAGFlow example",
- *         "pagerank": 0,
- *         "parser_config": {
- *             "chunk_token_num": 128,
- *             "delimiter": "\\n!?;。；！？",
- *             "html4excel": false,
- *             "layout_recognize": "DeepDOC",
- *             "raptor": {
- *                 "use_raptor": false
- *                 }
- *             },
- *         "permission": "me",
- *         "similarity_threshold": 0.2,
- *         "status": "1",
- *         "tenant_id": "3af81804241d11f0a6a79f24fc270c7f",
- *         "token_num": 0,
- *         "update_date": "Mon, 28 Apr 2025 18:40:41 GMT",
- *         "update_time": 1745836841611,
- *         "vector_similarity_weight": 0.3,
- *     },
- * }
- * </pre>
+ * {@code ListDatasetDTO}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#create-dataset">Create dataset</a>
- * @since 2025/11/23
+ * @since 2025/11/26
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateDatasetDTO implements Serializable {
+public class ListDatasetDTO implements Serializable {
 
-    private static final long serialVersionUID = -8675006386255012387L;
+    private static final long serialVersionUID = 1618306494732628562L;
 
     @JsonProperty("avatar")
     private String avatar;

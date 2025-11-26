@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.context;
+package io.github.photowey.ai.ragflow.core.domain.dto;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
+
+// @formatter:off
 
 /**
- * {@code AbstractContext}.
+ * {@code EmptyDTO}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @since 2025/11/26
  */
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(fluent = true)
-public abstract class AbstractContext implements Serializable {
+public class EmptyDTO implements Serializable { }
 
-    private static final long serialVersionUID = 5230326734749682680L;
-
-    private String deployKey;
-    private String datasetId;
-}
+// @formatter:on

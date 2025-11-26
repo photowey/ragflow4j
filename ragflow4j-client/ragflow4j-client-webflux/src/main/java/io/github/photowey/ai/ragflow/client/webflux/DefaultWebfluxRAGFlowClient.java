@@ -15,7 +15,7 @@
  */
 package io.github.photowey.ai.ragflow.client.webflux;
 
-import io.github.photowey.ai.ragflow.client.webflux.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 
 /**

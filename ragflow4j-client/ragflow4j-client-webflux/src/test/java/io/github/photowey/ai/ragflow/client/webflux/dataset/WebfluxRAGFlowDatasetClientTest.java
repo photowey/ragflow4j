@@ -24,8 +24,8 @@ import org.junit.jupiter.api.BeforeAll;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.photowey.ai.ragflow.client.webflux.factory.WebClientFactory;
-import io.github.photowey.ai.ragflow.core.domain.context.CreateDatasetContext;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.payload.dataset.CreateDatasetPayload;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;

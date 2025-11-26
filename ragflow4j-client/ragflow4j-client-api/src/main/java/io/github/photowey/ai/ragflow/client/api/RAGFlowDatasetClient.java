@@ -15,8 +15,18 @@
  */
 package io.github.photowey.ai.ragflow.client.api;
 
-import io.github.photowey.ai.ragflow.core.domain.context.CreateDatasetContext;
+import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
+
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.ListDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.UpdateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.DeleteDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.ListDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.UpdateDatasetDTO;
 
 /**
  * {@code RAGFlowDatasetClient}.
@@ -120,5 +130,120 @@ public interface RAGFlowDatasetClient {
      * @param context {@link CreateDatasetContext}
      * @return {@link CreateDatasetDTO}
      */
-    CreateDatasetDTO createDataset(CreateDatasetContext context);
+    CreateDatasetDTO createDataset(@NotNull CreateDatasetContext context);
+
+    /**
+     * Delete datasets.
+     *
+     * <pre>
+     * ### Delete datasets
+     *
+     * **DELETE** `/api/v1/datasets`
+     *
+     * Deletes datasets by ID.
+     *
+     * #### Request
+     *
+     * - Method: DELETE
+     * - URL: `/api/v1/datasets`
+     * - Headers:
+     *   - `'content-Type: application/json'`
+     *   - `'Authorization: Bearer <YOUR_API_KEY>'`
+     *   - Body:
+     *     - `"ids"`: `list[string]` or `null`
+     *
+     * ##### Request example
+     *
+     * ```bash
+     * curl --request DELETE \
+     *      --url http://{address}/api/v1/datasets \
+     *      --header 'Content-Type: application/json' \
+     *      --header 'Authorization: Bearer <YOUR_API_KEY>' \
+     *      --data '{
+     *      "ids": ["d94a8dc02c9711f0930f7fbc369eab6d", "e94a8dc02c9711f0930f7fbc369eab6e"]
+     *      }'
+     * ```
+     * </pre>
+     *
+     * @param context {@link DeleteDatasetContext}
+     * @return {@link DeleteDatasetDTO}
+     */
+    DeleteDatasetDTO deleteDatasets(@NotNull DeleteDatasetContext context);
+
+    /**
+     * Update dataset.
+     *
+     * <pre>
+     * ### Update dataset
+     *
+     * **PUT** `/api/v1/datasets/{dataset_id}`
+     *
+     * Updates configurations for a specified dataset.
+     *
+     * #### Request
+     *
+     * - Method: PUT
+     * - URL: `/api/v1/datasets/{dataset_id}`
+     * - Headers:
+     *   - `'content-Type: application/json'`
+     *   - `'Authorization: Bearer <YOUR_API_KEY>'`
+     * - Body:
+     *   - `"name"`: `string`
+     *   - `"avatar"`: `string`
+     *   - `"description"`: `string`
+     *   - `"embedding_model"`: `string`
+     *   - `"permission"`: `string`
+     *   - `"chunk_method"`: `string`
+     *   - `"pagerank"`: `int`
+     *   - `"parser_config"`: `object`
+     *
+     * ##### Request example
+     *
+     * ```bash
+     * curl --request PUT \
+     *      --url http://{address}/api/v1/datasets/{dataset_id} \
+     *      --header 'Content-Type: application/json' \
+     *      --header 'Authorization: Bearer <YOUR_API_KEY>' \
+     *      --data '
+     *      {
+     *           "name": "updated_dataset"
+     *      }'
+     * ```
+     * </pre>
+     *
+     * @param context {@link UpdateDatasetContext}
+     * @return {@link UpdateDatasetDTO}
+     */
+    UpdateDatasetDTO updateDataset(@NotNull UpdateDatasetContext context);
+
+    /**
+     * List datasets.
+     *
+     * <pre>
+     * ### List datasets
+     *
+     * **GET** `/api/v1/datasets?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&name={dataset_name}&id={dataset_id}`
+     *
+     * Lists datasets.
+     *
+     * #### Request
+     *
+     * - Method: GET
+     * - URL: `/api/v1/datasets?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&name={dataset_name}&id={dataset_id}`
+     * - Headers:
+     *   - `'Authorization: Bearer <YOUR_API_KEY>'`
+     *
+     * ##### Request example
+     *
+     * ```bash
+     * curl --request GET \
+     *      --url http://{address}/api/v1/datasets?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&name={dataset_name}&id={dataset_id} \
+     *      --header 'Authorization: Bearer <YOUR_API_KEY>'
+     * ```
+     * </pre>
+     *
+     * @param context {@link ListDatasetContext}
+     * @return {@link ListDatasetDTO}
+     */
+    List<ListDatasetDTO> listDatasets(@NotNull ListDatasetContext context);
 }

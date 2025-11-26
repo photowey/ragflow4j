@@ -19,11 +19,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.github.photowey.ai.ragflow.client.webflux.AbstractRAGFlowClient;
-import io.github.photowey.ai.ragflow.client.webflux.factory.WebClientFactory;
-import io.github.photowey.ai.ragflow.core.domain.context.CreateDatasetContext;
+import io.github.photowey.ai.ragflow.client.webflux.core.builder.QueryParamBuilder;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.ListDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.UpdateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
@@ -54,7 +60,7 @@ public abstract class AbstractRAGFlowDatasetClient extends AbstractRAGFlowClient
         WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
 
         // @formatter:off
-        Mono<RAGFlowResponse<T>> mono = client.post()
+        Mono<RAGFlowResponse<T>> mono = this.create(client, RAGFlowDictionary.API.CREATE_DATASET)
             .uri(RAGFlowDictionary.API.CREATE_DATASET.route())
             .bodyValue(context.payload())
             .retrieve()
@@ -62,5 +68,68 @@ public abstract class AbstractRAGFlowDatasetClient extends AbstractRAGFlowClient
         // @formatter:on
 
         return fx.apply(mono);
+    }
+
+    protected <T, D> D tryDeleteDatasets(
+        DeleteDatasetContext context,
+        Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
+        Function<Mono<RAGFlowResponse<T>>, D> fx) {
+
+        WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
+
+        // @formatter:off
+        Mono<RAGFlowResponse<T>> mono = this.create(client, RAGFlowDictionary.API.DELETE_DATASETS)
+            .uri(RAGFlowDictionary.API.DELETE_DATASETS.route())
+            .bodyValue(context.payload())
+            .retrieve()
+            .bodyToMono(ref.get());
+        // @formatter:on
+
+        return fx.apply(mono);
+    }
+
+    protected <T, D> D tryUpdateDataset(
+        UpdateDatasetContext context,
+        Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
+        Function<Mono<RAGFlowResponse<T>>, D> fx) {
+
+        WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
+
+        // @formatter:off
+        Mono<RAGFlowResponse<T>> mono = this.create(client, RAGFlowDictionary.API.UPDATE_DATASET)
+            .uri(RAGFlowDictionary.API.UPDATE_DATASET.route(), context.datasetId())
+            .bodyValue(context.payload())
+            .retrieve()
+            .bodyToMono(ref.get());
+        // @formatter:on
+
+        return fx.apply(mono);
+    }
+
+    protected <T, D> D tryListDatasets(
+        ListDatasetContext context,
+        Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
+        Function<Mono<RAGFlowResponse<T>>, D> fx) {
+
+        WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
+        MultiValueMap<String, String> queryParams = QueryParamBuilder.toQueryParams(context.query());
+
+        // @formatter:off
+        Mono<RAGFlowResponse<T>> mono = this.create(client, RAGFlowDictionary.API.LIST_DATASETS)
+            .uri(builder -> builder
+                .path(RAGFlowDictionary.API.LIST_DATASETS.route())
+                .queryParams(queryParams)
+                .build()
+            )
+            .retrieve()
+            .bodyToMono(ref.get());
+        // @formatter:on
+
+        return fx.apply(mono);
+    }
+
+    private WebClient.RequestBodyUriSpec create(WebClient client, RAGFlowDictionary.API api) {
+        HttpMethod httpMethod = HttpMethod.valueOf(api.method());
+        return client.method(httpMethod);
     }
 }

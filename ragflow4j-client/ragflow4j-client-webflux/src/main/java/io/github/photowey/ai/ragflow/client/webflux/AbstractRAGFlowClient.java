@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.github.photowey.ai.ragflow.client.webflux.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
 import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
 import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;

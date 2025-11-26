@@ -13,32 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.context;
+package io.github.photowey.ai.ragflow.core.domain.dto.document;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 /**
- * {@code AbstractContext}.
+ * List documents.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#list-documents">List documents</a>
+ * @since 2025/11/26
  */
 @Data
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(fluent = true)
-public abstract class AbstractContext implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ListDocumentDTO implements Serializable {
 
-    private static final long serialVersionUID = 5230326734749682680L;
+    private static final long serialVersionUID = 6684713032831363409L;
 
-    private String deployKey;
-    private String datasetId;
+    @JsonProperty("total")
+    private Long total;
+
+    @JsonProperty("docs")
+    private List<DocumentDTO> documents;
 }

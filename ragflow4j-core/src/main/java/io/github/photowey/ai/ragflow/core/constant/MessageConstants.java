@@ -27,4 +27,7 @@ public interface MessageConstants {
     String UNKNOWN_ERROR = "Unknown Error.";
     String RAGFLOW_DEPLOYMENT_KEY_INVALID = "The deploy key(%s) is invalid.";
     String CREATE_DATASET_FAILED = "Failed to create dataset(%s): ";
+    String DELETE_DATASET_FAILED = "Failed to delete datasets(%s): ";
+    String UPDATE_DATASET_FAILED = "Failed to update dataset(%s): ";
+    String LIST_DATASET_FAILED = "Failed to list dataset: ";
 }

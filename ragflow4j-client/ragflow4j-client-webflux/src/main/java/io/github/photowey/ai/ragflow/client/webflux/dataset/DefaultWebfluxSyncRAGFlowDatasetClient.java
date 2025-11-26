@@ -15,12 +15,22 @@
  */
 package io.github.photowey.ai.ragflow.client.webflux.dataset;
 
+import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
+
 import org.springframework.core.ParameterizedTypeReference;
 
-import io.github.photowey.ai.ragflow.client.webflux.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
 import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
-import io.github.photowey.ai.ragflow.core.domain.context.CreateDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.ListDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.UpdateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.DeleteDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.ListDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.UpdateDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
 import io.github.photowey.ai.ragflow.core.formatter.StringFormatter;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
@@ -45,7 +55,7 @@ public class DefaultWebfluxSyncRAGFlowDatasetClient extends AbstractRAGFlowDatas
     }
 
     @Override
-    public CreateDatasetDTO createDataset(CreateDatasetContext context) {
+    public CreateDatasetDTO createDataset(@NotNull CreateDatasetContext context) {
         // @formatter:off
         RAGFlowResponse<CreateDatasetDTO> response = this.tryCreateDataset(
             context,
@@ -59,4 +69,48 @@ public class DefaultWebfluxSyncRAGFlowDatasetClient extends AbstractRAGFlowDatas
         );
     }
 
+    @Override
+    public DeleteDatasetDTO deleteDatasets(@NotNull DeleteDatasetContext context) {
+        // @formatter:off
+        RAGFlowResponse<DeleteDatasetDTO> response = this.tryDeleteDatasets(
+            context,
+            () -> new ParameterizedTypeReference<RAGFlowResponse<DeleteDatasetDTO>>() { },
+            Mono::block
+        );
+        // @formatter:on
+
+        return this.unwrap(response, () ->
+            StringFormatter.format(MessageConstants.DELETE_DATASET_FAILED, context.payload().documentIds())
+        );
+    }
+
+    @Override
+    public UpdateDatasetDTO updateDataset(@NotNull UpdateDatasetContext context) {
+        // @formatter:off
+        RAGFlowResponse<UpdateDatasetDTO> response = this.tryUpdateDataset(
+            context,
+            () -> new ParameterizedTypeReference<RAGFlowResponse<UpdateDatasetDTO>>() { },
+            Mono::block
+        );
+        // @formatter:on
+
+        return this.unwrap(response, () ->
+            StringFormatter.format(MessageConstants.UPDATE_DATASET_FAILED, context.datasetId())
+        );
+    }
+
+    @Override
+    public List<ListDatasetDTO> listDatasets(@NotNull ListDatasetContext context) {
+        // @formatter:off
+        RAGFlowResponse<List<ListDatasetDTO>> response = this.tryListDatasets(
+            context,
+            () -> new ParameterizedTypeReference<RAGFlowResponse<List<ListDatasetDTO>>>() { },
+            Mono::block
+        );
+        // @formatter:on
+
+        return this.unwrap(response, () ->
+            MessageConstants.LIST_DATASET_FAILED
+        );
+    }
 }

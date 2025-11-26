@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.client.webflux.factory;
+package io.github.photowey.ai.ragflow.client.webflux.core.factory;
 
 import java.time.Duration;
 import java.util.Map;

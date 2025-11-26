@@ -13,32 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.context;
+package io.github.photowey.ai.ragflow.core.domain.query.dataset;
 
 import java.io.Serializable;
+import java.util.List;
+
+import io.github.photowey.ai.ragflow.core.domain.query.AbstractPaginationQuery;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 /**
- * {@code AbstractContext}.
+ * List documents.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#list-documents">List documents</a>
+ * @since 2025/11/26
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(fluent = true)
-public abstract class AbstractContext implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class ListDocumentQuery extends AbstractPaginationQuery implements Serializable {
 
-    private static final long serialVersionUID = 5230326734749682680L;
+    private static final long serialVersionUID = -1410198341631218169L;
 
-    private String deployKey;
-    private String datasetId;
+    private Long createTimeFrom;
+    private Long createTimeTo;
+    private List<String> suffix;
+    private List<String> run;
 }

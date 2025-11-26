@@ -13,32 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.context;
+package io.github.photowey.ai.ragflow.core.domain.context.document;
 
-import java.io.Serializable;
+import io.github.photowey.ai.ragflow.core.domain.context.AbstractContext;
+import io.github.photowey.ai.ragflow.core.domain.payload.document.DeleteDocumentPayload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 /**
- * {@code AbstractContext}.
+ * Delete documents.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#delete-documents">Delete documents</a>
+ * @since 2025/11/26
  */
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent = true)
-public abstract class AbstractContext implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class DeleteDocumentContext extends AbstractContext {
 
-    private static final long serialVersionUID = 5230326734749682680L;
+    private static final long serialVersionUID = 4389404596335103295L;
 
-    private String deployKey;
-    private String datasetId;
+    private DeleteDocumentPayload payload;
 }
