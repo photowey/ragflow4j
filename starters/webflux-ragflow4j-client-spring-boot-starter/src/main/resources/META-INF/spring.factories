@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.github.photowey.ai.ragflow.client.webflux.boot.starter.config.WebfluxRAGFlowClientConfiguration

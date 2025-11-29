@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2025-present The Ragflow4j Authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.photowey.ai.ragflow.core.domain.model.response;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.function.Supplier;
+
+import jakarta.validation.constraints.NotNull;
+
+import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
+import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
+import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * {@code RAGFlowResponse}.
+ *
+ * @param <T> the type of data
+ * @author photowey
+ * @version 2025.0.22.0.1
+ * @since 2025/11/23
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
+public class RAGFlowResponse<T> implements Serializable {
+
+    private static final long serialVersionUID = -2831912627465424968L;
+
+    @NotNull(message = "The code is required.")
+    private Integer code;
+    private String message;
+
+    private T data;
+
+    // ----------------------------------------------------------------
+
+    public T unwrap(Supplier<String> fx) {
+        if (this.determineIsOk()) {
+            return this.data();
+        }
+
+        String errorMessage = Objects.nonNull(this.message) && !this.message.trim().isEmpty()
+            ? this.getMessage()
+            : MessageConstants.UNKNOWN_ERROR;
+        throw new RAGFlowException(fx.get() + errorMessage);
+    }
+
+    // ----------------------------------------------------------------
+
+    public boolean determineIsOk() {
+        if (Objects.isNull(this.code)) {
+            return false;
+        }
+
+        return RAGFlowDictionary.ErrorCode.determineIsOk(this.code);
+    }
+
+    // ----------------------------------------------------------------
+
+    public Integer code() {
+        return code;
+    }
+
+    public String message() {
+        return message;
+    }
+
+    public T data() {
+        return data;
+    }
+}
