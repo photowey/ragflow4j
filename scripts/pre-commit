@@ -2,12 +2,12 @@
 
 #
 # @author photowey
-# @version 1.0.0
+# @version 2025.0.22.0.1
 # @since 2025/11/15
 #
 
-export LANG="zh_CN.UTF-8"
-export LC_ALL="zh_CN.UTF-8"
+#export LANG="zh_CN.UTF-8"
+#export LC_ALL="zh_CN.UTF-8"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'

@@ -1,0 +1,48 @@
+{
+    "code": 0,
+    "data": [
+        {
+            "created_by": "35aeb668c2c511f0806ada3d97d6160a",
+            "id": "8bad9110c83811f0829906a4f1a8fa0e",
+            "kb_id": "f75bd8aec2c511f0a890da3d97d6160a",
+            "location": "Se\u00f1orita.pdf",
+            "name": "Se\u00f1orita.pdf",
+            "parser_config": {
+                "auto_keywords": 0,
+                "auto_questions": 0,
+                "chunk_token_num": 512,
+                "delimiter": "\n",
+                "graphrag": {
+                    "entity_types": [
+                        "organization",
+                        "person",
+                        "geo",
+                        "event",
+                        "category"
+                    ],
+                    "method": "light",
+                    "use_graphrag": true
+                },
+                "html4excel": false,
+                "layout_recognize": "DeepDOC",
+                "raptor": {
+                    "max_cluster": 64,
+                    "max_token": 256,
+                    "prompt": "Please summarize the following paragraphs. Be careful with the numbers, do not make things up. Paragraphs as following:\n      {cluster_content}\nThe above is the content you need to summarize.",
+                    "random_seed": 0,
+                    "threshold": 0.1,
+                    "use_raptor": true
+                },
+                "topn_tags": 3
+            },
+            "parser_id": "naive",
+            "pipeline_id": "",
+            "size": 474832,
+            "source_type": "local",
+            "suffix": "pdf",
+            "thumbnail": "thumbnail_8bad9110c83811f0829906a4f1a8fa0e.png",
+            "type": "pdf"
+        }
+    ],
+    "message": "success"
+}

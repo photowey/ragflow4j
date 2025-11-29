@@ -1,4 +1,5 @@
 # `ragflow4j`
+
 Unofficial Java SDK for `RAGFlow` — 非官方的 `RAGFlow` Java SDK.
 
 ## 1.`Development`
@@ -37,6 +38,7 @@ $ source ~/.bashrc
 ```
 
 ## 1.2.`Act actions`
+
 ```shell
 $ act --action-offline-mode -v -W .github/workflows/maven.act.yml -P ubuntu-latest=photowey/ubuntu:act-latest
 ```

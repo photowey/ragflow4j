@@ -23,6 +23,7 @@
         <module>ragflow4j-core</module>
         <module>starters/webflux-ragflow4j-client-spring-boot3-starter</module>
         <module>starters/webflux-ragflow4j-client-spring-boot-starter</module>
+        <module>starters/webflux-ragflow4j-client-starter-core</module>
     </modules>
 
     <licenses>
@@ -52,7 +53,7 @@
 
     <!-- @formatter:off -->
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -82,7 +83,11 @@
         <checkstyle.version>10.21.4</checkstyle.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
 
+        <spring-boot.version>2.7.5</spring-boot.version>
+
         <lombok.version>1.18.20</lombok.version>
+        <jackson-databind.version>2.19.2</jackson-databind.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
     </properties>
     <!-- @formatter:on -->
 
@@ -91,6 +96,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>io.github.photowey</groupId>
                 <artifactId>ragflow4j-core</artifactId>
@@ -117,6 +130,23 @@
                 <groupId>io.github.photowey</groupId>
                 <artifactId>webflux-ragflow4j-client-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.photowey</groupId>
+                <artifactId>webflux-ragflow4j-client-starter-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta.validation-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -202,10 +232,17 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <excludePackageNames>
+                        io.github.photowey.ai.ragflow.core.enums;io.github.photowey.ai.ragflow.core.domain.payload;io.github.photowey.ai.ragflow.client
+                    </excludePackageNames>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -244,7 +281,7 @@
                     <quiet>true</quiet>
                     <inlineHeader>
                         <![CDATA[
-Copyright (c) 2025-present photowey<photowey@gmail.com> All rights reserved.
+Copyright (c) 2025-present The Ragflow4j Authors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

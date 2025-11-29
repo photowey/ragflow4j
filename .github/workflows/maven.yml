@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven | GraalVM (JDK 21)
+name: Java CI with Maven
 
 on:
   push:
@@ -18,55 +18,32 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     env:
-      ACT: false
-      CI_SPRING_DATASOURCE_ACCESS_ENABLED: false
       MAVEN_REPO_PATH: "/home/runner/m2/repository"
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup GraalVM (JDK 21)
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          distribution: 'graalvm'
-          java-version: '21'
+          java-version: '11'
+          distribution: 'temurin'
           cache: maven
-
-      - name: Install Maven (for act)
-        if: ${{ env.ACT }}
-        run: |
-          sudo apt update
-          sudo apt install -y maven
-
-      - name: Verify Java & GraalVM & Maven
-        run: |
-          java --version
-          native-image --version
-          mvn --version
-
-      - name: GitHub actions
-        if: ${{ !env.ACT }}
-        run: echo "This runs only on GitHub"
-
-      - name: Act actions
-        if: ${{ env.ACT }}
-        run: echo "This runs only in act"
 
       - name: Set up Maven environment
         run: echo "MAVEN_REPO=${MAVEN_REPO_PATH}" >> $GITHUB_ENV
 
       - name: Configure Maven
         run: |
-          mkdir -p /home/runner/.m2
+          mkdir -p /home/runner/m2/repository
           echo "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\"
             xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
             xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd\">
             <localRepository>/home/runner/m2/repository</localRepository>
-          </settings>" > /home/runner/.m2/settings.xml
+          </settings>" > /home/runner/m2/settings.xml
 
-      - name: Deploy with Maven (Local Repository)
+      - name: Deploy with Maven
         run: mvn clean -DskipTests source:jar deploy
 
       - name: Build with Maven

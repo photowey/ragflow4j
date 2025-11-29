@@ -22,6 +22,14 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.github.photowey</groupId>
+            <artifactId>ragflow4j-client-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.photowey</groupId>
+            <artifactId>webflux-ragflow4j-client-starter-core</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
