@@ -25,9 +25,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import io.github.photowey.ai.ragflow.client.webflux.AbstractRAGFlowClient;
 import io.github.photowey.ai.ragflow.client.webflux.core.builder.QueryParamBuilder;
-import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteKnowledgeGraphContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.GetKnowledgeGraphContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.ListDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.UpdateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
@@ -48,7 +50,7 @@ public abstract class AbstractRAGFlowDatasetClient extends AbstractRAGFlowClient
 
     public AbstractRAGFlowDatasetClient(
         RAGFlowPropertiesGetter getter,
-        WebClientFactory factory) {
+        RAGFlowWebClientFactory factory) {
         super(getter, factory);
     }
 
@@ -127,6 +129,44 @@ public abstract class AbstractRAGFlowDatasetClient extends AbstractRAGFlowClient
 
         return fx.apply(mono);
     }
+
+    // ----------------------------------------------------------------
+
+    protected <T, D> D tryGetKnowledgeGraph(
+        GetKnowledgeGraphContext context,
+        Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
+        Function<Mono<RAGFlowResponse<T>>, D> fx) {
+
+        WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
+
+        // @formatter:off
+        Mono<RAGFlowResponse<T>> mono = this.create(client, RAGFlowDictionary.API.GET_KNOWLEDGE_GRAPH)
+            .uri(RAGFlowDictionary.API.GET_KNOWLEDGE_GRAPH.route(), context.datasetId())
+            .retrieve()
+            .bodyToMono(ref.get());
+        // @formatter:on
+
+        return fx.apply(mono);
+    }
+
+    protected <T, D> D tryDeleteKnowledgeGraph(
+        DeleteKnowledgeGraphContext context,
+        Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
+        Function<Mono<RAGFlowResponse<T>>, D> fx) {
+
+        WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
+
+        // @formatter:off
+        Mono<RAGFlowResponse<T>> mono = this.create(client, RAGFlowDictionary.API.DELETE_KNOWLEDGE_GRAPH)
+            .uri(RAGFlowDictionary.API.DELETE_KNOWLEDGE_GRAPH.route(), context.datasetId())
+            .retrieve()
+            .bodyToMono(ref.get());
+        // @formatter:on
+
+        return fx.apply(mono);
+    }
+
+    // ----------------------------------------------------------------
 
     private WebClient.RequestBodyUriSpec create(WebClient client, RAGFlowDictionary.API api) {
         HttpMethod httpMethod = HttpMethod.valueOf(api.method());

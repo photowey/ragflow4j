@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
 import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;
@@ -45,7 +45,7 @@ import lombok.experimental.Accessors;
 public abstract class AbstractRAGFlowClient implements Serializable {
 
     protected final RAGFlowPropertiesGetter getter;
-    protected final WebClientFactory factory;
+    protected final RAGFlowWebClientFactory factory;
 
     protected <T> T unwrap(RAGFlowResponse<T> response, Supplier<String> fx) {
         if (Objects.isNull(response)) {

@@ -21,14 +21,17 @@ import jakarta.validation.constraints.NotNull;
 
 import org.springframework.core.ParameterizedTypeReference;
 
-import io.github.photowey.ai.ragflow.client.webflux.core.factory.WebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteKnowledgeGraphContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.GetKnowledgeGraphContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.ListDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.UpdateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.DeleteDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.KnowledgeGraphDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.ListDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.UpdateDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
@@ -50,7 +53,7 @@ public class DefaultWebfluxSyncRAGFlowDatasetClient extends AbstractRAGFlowDatas
 
     public DefaultWebfluxSyncRAGFlowDatasetClient(
         RAGFlowPropertiesGetter getter,
-        WebClientFactory factory) {
+        RAGFlowWebClientFactory factory) {
         super(getter, factory);
     }
 
@@ -111,6 +114,38 @@ public class DefaultWebfluxSyncRAGFlowDatasetClient extends AbstractRAGFlowDatas
 
         return this.unwrap(response, () ->
             MessageConstants.LIST_DATASET_FAILED
+        );
+    }
+
+    // ----------------------------------------------------------------
+
+    @Override
+    public KnowledgeGraphDTO getKnowledgeGraph(GetKnowledgeGraphContext context) {
+        // @formatter:off
+        RAGFlowResponse<KnowledgeGraphDTO> response = this.tryGetKnowledgeGraph(
+            context,
+            () -> new ParameterizedTypeReference<RAGFlowResponse<KnowledgeGraphDTO>>() { },
+            Mono::block
+        );
+        // @formatter:on
+
+        return this.unwrap(response, () ->
+            MessageConstants.GET_KNOWLEDGE_GRAPH_FAILED
+        );
+    }
+
+    @Override
+    public Boolean deleteKnowledgeGraph(DeleteKnowledgeGraphContext context) {
+        // @formatter:off
+        RAGFlowResponse<Boolean> response = this.tryDeleteKnowledgeGraph(
+            context,
+            () -> new ParameterizedTypeReference<RAGFlowResponse<Boolean>>() { },
+            Mono::block
+        );
+        // @formatter:on
+
+        return this.unwrap(response, () ->
+            MessageConstants.DELETE_KNOWLEDGE_GRAPH_FAILED
         );
     }
 }

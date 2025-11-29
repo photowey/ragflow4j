@@ -30,4 +30,6 @@ public interface MessageConstants {
     String DELETE_DATASET_FAILED = "Failed to delete datasets(%s): ";
     String UPDATE_DATASET_FAILED = "Failed to update dataset(%s): ";
     String LIST_DATASET_FAILED = "Failed to list dataset: ";
+    String GET_KNOWLEDGE_GRAPH_FAILED = "Failed to get knowledge graph: ";
+    String DELETE_KNOWLEDGE_GRAPH_FAILED = "Failed to delete knowledge graph: ";
 }

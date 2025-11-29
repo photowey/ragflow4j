@@ -32,13 +32,14 @@ import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 import reactor.netty.http.client.HttpClient;
 
 /**
- * {@code WebClientFactory}.
+ * {@code RAGFlowWebClientFactory}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
  * @since 2025/11/23
  */
-public class WebClientFactory {
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
+public class RAGFlowWebClientFactory {
 
     private final Map<String, WebClient> clientCache = new ConcurrentHashMap<>();
 
@@ -46,7 +47,7 @@ public class WebClientFactory {
 
     public WebClient createFormdataWebClient(String deployKey, RAGFlowPropertiesGetter getter) {
         return this.clientCache.computeIfAbsent(deployKey,
-            (key) -> this.createFormdataWebClient(key, getter, WebClientFactory::nothing)
+            (key) -> this.createFormdataWebClient(key, getter, RAGFlowWebClientFactory::nothing)
         );
     }
 
@@ -62,7 +63,7 @@ public class WebClientFactory {
     // ----------------------------------------------------------------
 
     public WebClient createWebClient(String deployKey, RAGFlowPropertiesGetter getter) {
-        return this.tryCreateWebClient(deployKey, getter, WebClientFactory::nothing, (builder) -> {
+        return this.tryCreateWebClient(deployKey, getter, RAGFlowWebClientFactory::nothing, (builder) -> {
             builder.defaultHeader(RAGFlowConstants.Header.CONTENT_TYPE, RAGFlowConstants.Header.APPLICATION_JSON);
         });
     }

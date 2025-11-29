@@ -21,10 +21,13 @@ import jakarta.validation.constraints.NotNull;
 
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteKnowledgeGraphContext;
+import io.github.photowey.ai.ragflow.core.domain.context.dataset.GetKnowledgeGraphContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.ListDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.UpdateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.DeleteDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.dataset.KnowledgeGraphDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.ListDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.UpdateDatasetDTO;
 
@@ -246,4 +249,68 @@ public interface RAGFlowDatasetClient {
      * @return {@link ListDatasetDTO}
      */
     List<ListDatasetDTO> listDatasets(@NotNull ListDatasetContext context);
+
+    // ----------------------------------------------------------------
+
+    /**
+     * Get knowledge graph.
+     *
+     * <pre>
+     * ### Get knowledge graph
+     *
+     * **GET** `/api/v1/datasets/{dataset_id}/knowledge_graph`
+     *
+     * Retrieves the knowledge graph of a specified dataset.
+     *
+     * #### Request
+     *
+     * - Method: GET
+     * - URL: `/api/v1/datasets/{dataset_id}/knowledge_graph`
+     * - Headers:
+     *   - `'Authorization: Bearer <YOUR_API_KEY>'`
+     *
+     * ##### Request example
+     *
+     * ```bash
+     * curl --request GET \
+     *      --url http://{address}/api/v1/datasets/{dataset_id}/knowledge_graph \
+     *      --header 'Authorization: Bearer <YOUR_API_KEY>'
+     * ```
+     * </pre>
+     *
+     * @param context {@link GetKnowledgeGraphContext}
+     * @return {@link KnowledgeGraphDTO}
+     */
+    KnowledgeGraphDTO getKnowledgeGraph(@NotNull GetKnowledgeGraphContext context);
+
+    /**
+     * Delete knowledge graph.
+     *
+     * <pre>
+     * ### Delete knowledge graph
+     *
+     * **DELETE** `/api/v1/datasets/{dataset_id}/knowledge_graph`
+     *
+     * Removes the knowledge graph of a specified dataset.
+     *
+     * #### Request
+     *
+     * - Method: DELETE
+     * - URL: `/api/v1/datasets/{dataset_id}/knowledge_graph`
+     * - Headers:
+     *   - `'Authorization: Bearer <YOUR_API_KEY>'`
+     *
+     * ##### Request example
+     *
+     * ```bash
+     * curl --request DELETE \
+     *      --url http://{address}/api/v1/datasets/{dataset_id}/knowledge_graph \
+     *      --header 'Authorization: Bearer <YOUR_API_KEY>'
+     * ```
+     * </pre>
+     *
+     * @param context {@link DeleteKnowledgeGraphContext}
+     * @return {@link Boolean}
+     */
+    Boolean deleteKnowledgeGraph(@NotNull DeleteKnowledgeGraphContext context);
 }

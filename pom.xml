@@ -84,6 +84,7 @@
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
 
         <spring-boot.version>2.7.5</spring-boot.version>
+
         <lombok.version>1.18.20</lombok.version>
         <jackson-databind.version>2.19.2</jackson-databind.version>
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
