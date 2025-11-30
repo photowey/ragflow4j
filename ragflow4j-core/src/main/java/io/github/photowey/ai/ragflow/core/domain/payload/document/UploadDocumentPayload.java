@@ -18,6 +18,10 @@ package io.github.photowey.ai.ragflow.core.domain.payload.document;
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
 import io.github.photowey.ai.ragflow.core.domain.payload.AbstractPayload;
 
 import lombok.AllArgsConstructor;
@@ -39,11 +43,14 @@ import lombok.experimental.Accessors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
 public class UploadDocumentPayload extends AbstractPayload {
 
     private static final long serialVersionUID = -3650860345022157213L;
 
+    @Valid
+    @NotEmpty(message = "Documents must not be empty")
     private List<Document> documents;
 
     @Data
@@ -55,9 +62,12 @@ public class UploadDocumentPayload extends AbstractPayload {
 
         private static final long serialVersionUID = 3297280821128977767L;
 
+        @NotBlank(message = "Document name must not be blank")
         private String documentName;
 
+        @NotBlank(message = "Document original name must not be blank")
         private String originalName;
+        @NotEmpty(message = "Document data must not be empty")
         private byte[] data;
     }
 }

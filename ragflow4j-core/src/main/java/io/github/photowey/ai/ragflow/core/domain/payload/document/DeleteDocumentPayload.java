@@ -15,6 +15,21 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.payload.document;
 
+import java.util.List;
+
+import jakarta.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.github.photowey.ai.ragflow.core.domain.payload.AbstractPayload;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  * Delete documents.
  *
@@ -23,5 +38,17 @@ package io.github.photowey.ai.ragflow.core.domain.payload.document;
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#delete-documents">Delete documents</a>
  * @since 2025/11/26
  */
-public class DeleteDocumentPayload {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DeleteDocumentPayload extends AbstractPayload {
+
+    private static final long serialVersionUID = 6979863725932580109L;
+
+    @NotEmpty(message = "Document IDs must not be empty")
+    @JsonProperty("ids")
+    private List<String> documentIds;
 }

@@ -15,7 +15,6 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.payload.document;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import jakarta.validation.Valid;
@@ -26,10 +25,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.github.photowey.ai.ragflow.core.domain.model.ParserConfig;
+import io.github.photowey.ai.ragflow.core.domain.payload.AbstractPayload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -44,13 +45,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UpdateDocumentPayload implements Serializable {
+public class UpdateDocumentPayload extends AbstractPayload {
 
     private static final long serialVersionUID = 264205765767138418L;
 
     @JsonProperty("name")
-    @Size(min = 1, max = 255, message = "文档名称长度必须在1-255之间")
+    @Size(min = 1, max = 255, message = "Document name length must be between 1 and 255 characters")
     private String name;
 
     @JsonProperty("meta_fields")

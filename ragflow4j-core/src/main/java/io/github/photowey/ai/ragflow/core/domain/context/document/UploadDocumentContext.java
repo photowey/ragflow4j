@@ -15,6 +15,9 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.context.document;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import io.github.photowey.ai.ragflow.core.domain.context.AbstractContext;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.UploadDocumentPayload;
 
@@ -43,5 +46,7 @@ public class UploadDocumentContext extends AbstractContext {
 
     private static final long serialVersionUID = -6981729395783546754L;
 
+    @Valid
+    @NotNull(message = "Payload must not be null")
     private UploadDocumentPayload payload;
 }

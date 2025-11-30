@@ -135,7 +135,7 @@ class WebfluxRAGFlowDatasetClientTest {
      */
     //@Test
     void testCreateDataset() {
-        WebfluxRAGFlowDatasetClient client = new DefaultWebfluxSyncRAGFlowDatasetClient(
+        WebfluxRAGFlowDatasetClient client = new DefaultSyncWebfluxRAGFlowDatasetClient(
             () -> properties,
             new RAGFlowWebClientFactory()
         );

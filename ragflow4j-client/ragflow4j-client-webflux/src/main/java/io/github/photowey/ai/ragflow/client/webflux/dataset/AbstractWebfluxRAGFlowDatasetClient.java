@@ -19,11 +19,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.github.photowey.ai.ragflow.client.webflux.AbstractRAGFlowClient;
+import io.github.photowey.ai.ragflow.client.webflux.AbstractWebfluxRAGFlowClient;
 import io.github.photowey.ai.ragflow.client.webflux.core.builder.QueryParamBuilder;
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
@@ -39,16 +38,16 @@ import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 import reactor.core.publisher.Mono;
 
 /**
- * {@code AbstractRAGFlowDatasetClient}.
+ * {@code AbstractWebfluxRAGFlowDatasetClient}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
  * @since 2025/11/23
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public abstract class AbstractRAGFlowDatasetClient extends AbstractRAGFlowClient {
+public abstract class AbstractWebfluxRAGFlowDatasetClient extends AbstractWebfluxRAGFlowClient {
 
-    public AbstractRAGFlowDatasetClient(
+    public AbstractWebfluxRAGFlowDatasetClient(
         RAGFlowPropertiesGetter getter,
         RAGFlowWebClientFactory factory) {
         super(getter, factory);
@@ -164,12 +163,5 @@ public abstract class AbstractRAGFlowDatasetClient extends AbstractRAGFlowClient
         // @formatter:on
 
         return fx.apply(mono);
-    }
-
-    // ----------------------------------------------------------------
-
-    private WebClient.RequestBodyUriSpec create(WebClient client, RAGFlowDictionary.API api) {
-        HttpMethod httpMethod = HttpMethod.valueOf(api.method());
-        return client.method(httpMethod);
     }
 }

@@ -1,0 +1,48 @@
+package io.github.photowey.ai.ragflow.core.domain.payload.document;
+
+import java.util.Objects;
+
+import jakarta.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import io.github.photowey.ai.ragflow.core.domain.payload.AbstractPayload;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+/**
+ * Download document.
+ *
+ * @author photowey
+ * @version 1.0.0
+ * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#download-document">Download document</a>
+ * @since 2025/11/30
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(fluent = true)
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DownloadDocumentPayload extends AbstractPayload {
+
+    private static final long serialVersionUID = 8859027490501316812L;
+
+    @NotBlank(message = "Document ID must not be blank")
+    private String documentId;
+    private String filename;
+
+    public String determineDownloadFilename() {
+        if (Objects.nonNull(this.filename) && !this.filename.trim().isEmpty()) {
+            return this.filename;
+        }
+
+        return this.documentId;
+    }
+}

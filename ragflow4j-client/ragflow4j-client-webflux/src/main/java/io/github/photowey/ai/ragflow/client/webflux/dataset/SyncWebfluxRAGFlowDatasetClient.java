@@ -15,14 +15,16 @@
  */
 package io.github.photowey.ai.ragflow.client.webflux.dataset;
 
+// @formatter:off
+
 /**
- * {@code WebfluxAsyncRAGFlowDatasetClient}.
+ * {@code SyncWebfluxRAGFlowDatasetClient}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
  * @since 2025/11/23
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public interface WebfluxAsyncRAGFlowDatasetClient {
-    // do nothing now.
-}
+public interface SyncWebfluxRAGFlowDatasetClient extends WebfluxRAGFlowDatasetClient { }
+
+// @formatter:on

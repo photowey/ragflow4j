@@ -15,6 +15,10 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.context.document;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import io.github.photowey.ai.ragflow.core.domain.context.AbstractContext;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.UpdateDocumentPayload;
 
@@ -43,5 +47,9 @@ public class UpdateDocumentContext extends AbstractContext {
 
     private static final long serialVersionUID = 9153860562557627524L;
 
+    @NotBlank(message = "Document ID must not be blank")
+    private String documentId;
+    @Valid
+    @NotNull(message = "Payload must not be null")
     private UpdateDocumentPayload payload;
 }

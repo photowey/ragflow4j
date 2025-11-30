@@ -19,11 +19,13 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
+import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
 import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 
@@ -32,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * {@code AbstractRAGFlowClient}.
+ * {@code AbstractWebfluxRAGFlowClient}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
@@ -42,7 +44,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public abstract class AbstractRAGFlowClient implements Serializable {
+public abstract class AbstractWebfluxRAGFlowClient implements Serializable {
 
     protected final RAGFlowPropertiesGetter getter;
     protected final RAGFlowWebClientFactory factory;
@@ -65,5 +67,12 @@ public abstract class AbstractRAGFlowClient implements Serializable {
 
     protected WebClient createWebClient(String deployKey) {
         return this.factory.createWebClient(deployKey, this.getter);
+    }
+
+    // ----------------------------------------------------------------
+
+    protected WebClient.RequestBodyUriSpec create(WebClient client, RAGFlowDictionary.API api) {
+        HttpMethod httpMethod = HttpMethod.valueOf(api.method());
+        return client.method(httpMethod);
     }
 }
