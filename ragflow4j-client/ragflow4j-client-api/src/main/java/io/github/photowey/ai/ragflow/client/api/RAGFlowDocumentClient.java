@@ -15,6 +15,8 @@
  */
 package io.github.photowey.ai.ragflow.client.api;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
 
 import io.github.photowey.ai.ragflow.core.domain.context.document.DeleteDocumentContext;
@@ -36,7 +38,7 @@ import io.github.photowey.ai.ragflow.core.domain.dto.document.UploadDocumentDTO;
  * {@code RAGFlowDocumentClient}.
  *
  * @author photowey
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @since 2025/11/30
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
@@ -77,7 +79,7 @@ public interface RAGFlowDocumentClient {
      * @param context {@link UploadDocumentContext}
      * @return {@link UploadDocumentDTO}
      */
-    UploadDocumentDTO uploadDocuments(@NotNull UploadDocumentContext context);
+    List<UploadDocumentDTO> uploadDocuments(@NotNull UploadDocumentContext context);
 
     /**
      * Update document.

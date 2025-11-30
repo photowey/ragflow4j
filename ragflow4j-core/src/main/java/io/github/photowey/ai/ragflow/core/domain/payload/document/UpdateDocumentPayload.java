@@ -74,6 +74,8 @@ public class UpdateDocumentPayload extends AbstractPayload {
      *   - `"one"`: One
      *   - `"email"`: Email
      * </pre>
+     *
+     * @see io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary.ChunkMethod
      */
     @JsonProperty("chunk_method")
     @Pattern(

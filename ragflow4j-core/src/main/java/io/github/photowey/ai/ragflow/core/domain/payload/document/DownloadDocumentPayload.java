@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
  * Download document.
  *
  * @author photowey
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#download-document">Download document</a>
  * @since 2025/11/30
  */

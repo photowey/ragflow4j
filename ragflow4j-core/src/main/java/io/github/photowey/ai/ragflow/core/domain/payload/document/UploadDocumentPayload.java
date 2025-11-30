@@ -63,7 +63,7 @@ public class UploadDocumentPayload extends AbstractPayload {
         private static final long serialVersionUID = 3297280821128977767L;
 
         @NotBlank(message = "Document name must not be blank")
-        private String documentName;
+        private String name;
 
         @NotBlank(message = "Document original name must not be blank")
         private String originalName;

@@ -17,6 +17,7 @@ package io.github.photowey.ai.ragflow.core.domain.payload.dataset;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -140,8 +141,13 @@ public class UpdateDatasetPayload extends AbstractPayload {
      * Default: 0
      * Minimum: 0
      * Maximum: 100
+     *
+     * <p>
+     * ----------------------------------------------------------------
+     * <pagerank> - Message: <Input should be a valid integer> - Value: <None>
      */
     @JsonProperty("pagerank")
+    @NotNull(message = "pagerank must not be null")
     private Integer pagerank;
 
     /**

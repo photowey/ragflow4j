@@ -15,6 +15,8 @@
  */
 package io.github.photowey.ai.ragflow.client.webflux.document;
 
+import java.util.List;
+
 import org.springframework.core.ParameterizedTypeReference;
 
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
@@ -42,7 +44,7 @@ import reactor.core.publisher.Mono;
  * {@code DefaultSyncWebfluxRAGFlowDocumentClient}.
  *
  * @author photowey
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @since 2025/11/30
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
@@ -56,11 +58,11 @@ public class DefaultSyncWebfluxRAGFlowDocumentClient
     }
 
     @Override
-    public UploadDocumentDTO uploadDocuments(UploadDocumentContext context) {
+    public List<UploadDocumentDTO> uploadDocuments(UploadDocumentContext context) {
         // @formatter:off
-        RAGFlowResponse<UploadDocumentDTO> response = this.tryUploadDocuments(
+        RAGFlowResponse<List<UploadDocumentDTO>> response = this.tryUploadDocuments(
             context,
-            () -> new ParameterizedTypeReference<RAGFlowResponse<UploadDocumentDTO>>() { },
+            () -> new ParameterizedTypeReference<RAGFlowResponse<List<UploadDocumentDTO>>>() { },
             Mono::block
         );
         // @formatter:on

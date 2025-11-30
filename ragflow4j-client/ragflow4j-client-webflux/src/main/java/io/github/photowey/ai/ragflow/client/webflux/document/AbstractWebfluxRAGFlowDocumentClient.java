@@ -54,7 +54,7 @@ import reactor.core.publisher.Mono;
  * {@code AbstractWebfluxRAGFlowDocumentClient}.
  *
  * @author photowey
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @since 2025/11/30
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
