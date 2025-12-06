@@ -26,14 +26,20 @@ import java.util.stream.Collectors;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.github.photowey.ai.ragflow.client.webflux.AbstractWebfluxRAGFlowClient;
 import io.github.photowey.ai.ragflow.client.webflux.core.builder.QueryParamBuilder;
+import io.github.photowey.ai.ragflow.client.webflux.core.download.ErrorDownloadHandle;
+import io.github.photowey.ai.ragflow.client.webflux.core.download.ReactiveStreamDownloadHandle;
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.core.constant.MessageConstants;
 import io.github.photowey.ai.ragflow.core.domain.context.document.DeleteDocumentContext;
@@ -43,11 +49,13 @@ import io.github.photowey.ai.ragflow.core.domain.context.document.ParseDocumentC
 import io.github.photowey.ai.ragflow.core.domain.context.document.StopParsingDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UpdateDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
-import io.github.photowey.ai.ragflow.core.domain.dto.document.DownloadDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.download.DownloadHandle;
+import io.github.photowey.ai.ragflow.core.domain.download.DownloadMetadata;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -110,45 +118,58 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     public <D> D tryDownloadDocument(
         DownloadDocumentContext context,
-        Function<Mono<DownloadDocumentDTO>, D> fx) {
+        Function<Mono<DownloadHandle>, D> fx) {
         WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
 
-        Mono<DownloadDocumentDTO> mono = this.create(client, RAGFlowDictionary.API.DOWNLOAD_DOCUMENT)
-            .uri(RAGFlowDictionary.API.DOWNLOAD_DOCUMENT.route(), context.datasetId(), context.payload().documentId())
-            .exchangeToMono(response -> {
-                MediaType contentType = response.headers().contentType()
-                    .orElse(MediaType.APPLICATION_OCTET_STREAM);
+        // This is the current best implementation for this synchronous requirement.
+        // ?
+        ClientResponse response = client.get()
+            .uri(
+                RAGFlowDictionary.API.DOWNLOAD_DOCUMENT.route(),
+                context.datasetId(),
+                context.payload().documentId()
+            )
+            .exchange()
+            .block();
 
-                if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
-                    return response.bodyToMono(Map.class)
-                        .map(body -> {
-                            Integer code = Optional.ofNullable(body.get("code"))
-                                .map(Object::toString)
-                                .filter(s -> s.matches("\\d+"))
-                                .map(Integer::parseInt)
-                                .orElse(500);
-                            String message = Optional.ofNullable(body.get("message"))
-                                .map(Object::toString)
-                                .orElse("Unknown error from RAGFlow");
+        HttpStatus status = Objects.requireNonNull(response).statusCode();
+        MediaType contentType = response.headers().contentType()
+            .orElse(MediaType.APPLICATION_OCTET_STREAM);
 
-                            return DownloadDocumentDTO.builder()
-                                .code(code)
-                                .message(message)
-                                .data(new byte[0])
-                                .build();
-                        });
-                }
+        if (!status.is2xxSuccessful()) {
+            Mono<DownloadHandle> rvt = this.handleNon2xxResponse(response, status);
+            return fx.apply(rvt);
+        }
 
-                return response.bodyToMono(byte[].class)
-                    .map(bytes -> DownloadDocumentDTO.builder()
-                        .code(0)
-                        .message("OK")
-                        .filename(context.payload().determineDownloadFilename())
-                        .data(bytes)
-                        .build());
-            });
+        if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
+            Mono<DownloadHandle> rvt = response.bodyToMono(Map.class)
+                .map(body -> this.extractBusinessError(body, status))
+                .map(meta -> (DownloadHandle) new ErrorDownloadHandle(meta))
+                .switchIfEmpty(Mono.defer(() -> {
+                    DownloadMetadata meta = DownloadMetadata.builder()
+                        .code(status.value())
+                        .message("HTTP " + status.value() + " with empty response body")
+                        .build();
 
-        return fx.apply(mono);
+                    return Mono.just(new ErrorDownloadHandle(meta));
+                }));
+
+            return fx.apply(rvt);
+        }
+
+        String filename = context.payload().determineDownloadFilename();
+        DownloadMetadata metadata = DownloadMetadata.builder()
+            .code(RAGFlowDictionary.ErrorCode.OK.code())
+            .message(RAGFlowDictionary.ErrorCode.OK.description())
+            .filename(filename)
+            .contentType(contentType.toString())
+            .build();
+
+        Flux<DataBuffer> bodyStream = response.body(BodyExtractors.toDataBuffers());
+        Mono<DownloadHandle> handleMono =
+            Mono.just(new ReactiveStreamDownloadHandle(metadata, bodyStream));
+
+        return fx.apply(handleMono);
     }
 
     // ----------------------------------------------------------------
@@ -239,5 +260,61 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
                 }
             };
         }).collect(Collectors.toList());
+    }
+
+    // ----------------------------------------------------------------
+
+    private Mono<DownloadHandle> handleNon2xxResponse(ClientResponse response, HttpStatus status) {
+        MediaType contentType = response.headers().contentType()
+            .orElse(MediaType.APPLICATION_OCTET_STREAM);
+
+        if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
+            return response.bodyToMono(Map.class)
+                .map(body -> this.extractBusinessError(body, status))
+                .map(meta -> (DownloadHandle) new ErrorDownloadHandle(meta))
+                .switchIfEmpty(Mono.defer(() -> {
+                    DownloadMetadata meta = DownloadMetadata.builder()
+                        .code(status.value())
+                        .message("HTTP " + status.value() + " with empty response body")
+                        .build();
+
+                    return Mono.just(new ErrorDownloadHandle(meta));
+                }));
+        }
+
+        DownloadMetadata meta = DownloadMetadata.builder()
+            .code(status.value())
+            .message("HTTP " + status.value() + ": " + status.getReasonPhrase())
+            .build();
+
+        return Mono.just(new ErrorDownloadHandle(meta));
+    }
+
+    private DownloadMetadata extractBusinessError(Map<?, ?> body, HttpStatus fallbackStatus) {
+        Integer code = Optional.ofNullable(body.get("code"))
+            .map(Object::toString)
+            .filter(s -> s.matches("-?\\d+"))
+            .map(Integer::parseInt)
+            .orElse(null);
+
+        String message = Optional.ofNullable(body.get("message"))
+            .map(Object::toString)
+            .orElse("HTTP " + fallbackStatus.value() + " " + fallbackStatus.getReasonPhrase());
+
+        if (Objects.nonNull(code) && code != 0) {
+            return DownloadMetadata.builder()
+                .code(code)
+                .message(message)
+                .build();
+        }
+
+        String errorMsg = (Objects.nonNull(code) && code == 0)
+            ? "Unexpected JSON response with code=0. Expected binary file stream."
+            : "Invalid or missing 'code' in JSON response. Expected binary file stream.";
+
+        return DownloadMetadata.builder()
+            .code(RAGFlowDictionary.ErrorCode.BAD_REQUEST.code())
+            .message(errorMsg)
+            .build();
     }
 }

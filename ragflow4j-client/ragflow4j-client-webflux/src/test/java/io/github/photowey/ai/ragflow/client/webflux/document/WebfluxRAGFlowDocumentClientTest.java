@@ -1,5 +1,23 @@
+/*
+ * Copyright (c) 2025-present The Ragflow4j Authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.github.photowey.ai.ragflow.client.webflux.document;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +29,13 @@ import io.github.photowey.ai.ragflow.client.webflux.AbstractWebfluxRAGFlowClient
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.DefaultSyncWebfluxRAGFlowDatasetClient;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
+import io.github.photowey.ai.ragflow.core.domain.context.document.DownloadDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UpdateDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.download.DownloadHandle;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.UploadDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.payload.document.DownloadDocumentPayload;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.UpdateDocumentPayload;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.UploadDocumentPayload;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
@@ -23,7 +44,7 @@ import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
  * {@code WebfluxRAGFlowDocumentClientTest}.
  *
  * @author photowey
- * @version 1.0.0
+ * @version 2025.0.22.0.1
  * @since 2025/11/30
  */
 class WebfluxRAGFlowDocumentClientTest extends AbstractWebfluxRAGFlowClientTest {
@@ -216,6 +237,88 @@ class WebfluxRAGFlowDocumentClientTest extends AbstractWebfluxRAGFlowClientTest 
             .build();
 
         documentClient.updateDocument(updateContext);
+
+        // ----------------------------------------------------------------
+
+        tryDeleteDataset(dataset.id(), client);
+    }
+
+    //@Test
+    void testDownloadDocument() throws IOException, InterruptedException {
+        WebfluxRAGFlowDatasetClient client = new DefaultSyncWebfluxRAGFlowDatasetClient(
+            () -> properties,
+            new RAGFlowWebClientFactory()
+        );
+
+        CreateDatasetDTO dataset = tryCreateDataset(client);
+
+        String filename = "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+        Resource pdf = new ClassPathResource("dev/pdf/" + filename);
+        byte[] bytes = readAllBytes(pdf);
+
+        UploadDocumentPayload payload = UploadDocumentPayload.builder()
+            .documents(List.of(
+                UploadDocumentPayload.Document.builder()
+                    .name("55555555_66666666_hotspot-virtual-machine-garbage-collection-tuning-guide.pdf")
+                    .originalName(filename)
+                    .data(bytes)
+                    .build()
+            ))
+            .build();
+
+        UploadDocumentContext context = UploadDocumentContext.builder()
+            .deployKey(DEPLOY_KEY)
+            .datasetId(dataset.id())
+            .payload(payload)
+            .build();
+
+        WebfluxRAGFlowDocumentClient documentClient = new DefaultSyncWebfluxRAGFlowDocumentClient(
+            () -> properties,
+            new RAGFlowWebClientFactory()
+        );
+
+        List<UploadDocumentDTO> documents = documentClient.uploadDocuments(context);
+        Assertions.assertNotNull(documents);
+        Assertions.assertEquals(1, documents.size());
+
+        UploadDocumentDTO sentinel = documents.get(0);
+
+        DownloadDocumentPayload documentPayload = DownloadDocumentPayload.builder()
+            .documentId(sentinel.getId())
+            .filename(filename)
+            .build();
+
+        DownloadDocumentContext downloadContext = DownloadDocumentContext.builder()
+            .deployKey(DEPLOY_KEY)
+            .datasetId(dataset.id())
+            .payload(documentPayload)
+            .build();
+
+        DownloadHandle handle = documentClient.downloadDocument(downloadContext);
+        Assertions.assertNotNull(handle);
+        Assertions.assertTrue(handle.determineIsOk());
+
+        String downloadFilename = "download-hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+        String copyPath = pdf.getFile().getAbsoluteFile().getParent() + File.separator + downloadFilename;
+
+        //handle.getInputStream().transferTo(new FileOutputStream(copyPath));
+        handle.writeTo(new FileOutputStream(copyPath));
+
+        File downloadedFile = new File(copyPath);
+        Assertions.assertTrue(
+            downloadedFile.length() > 0, "Downloaded file is 0 bytes: " + copyPath);
+
+        // ----------------------------------------------------------------
+
+        DownloadDocumentPayload badDocumentPayload = DownloadDocumentPayload.builder()
+            .documentId(sentinel.getId() + "_not_found")
+            .filename(filename)
+            .build();
+        downloadContext.payload(badDocumentPayload);
+
+        DownloadHandle badResult = documentClient.downloadDocument(downloadContext);
+        Assertions.assertNotNull(badResult);
+        Assertions.assertFalse(badResult.determineIsOk());
 
         // ----------------------------------------------------------------
 

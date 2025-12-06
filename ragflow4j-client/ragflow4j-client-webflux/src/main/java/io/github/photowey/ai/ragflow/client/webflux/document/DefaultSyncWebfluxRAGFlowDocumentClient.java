@@ -28,8 +28,8 @@ import io.github.photowey.ai.ragflow.core.domain.context.document.ParseDocumentC
 import io.github.photowey.ai.ragflow.core.domain.context.document.StopParsingDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UpdateDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.download.DownloadHandle;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.DeleteDocumentDTO;
-import io.github.photowey.ai.ragflow.core.domain.dto.document.DownloadDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.ListDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.ParseDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.StopParsingDocumentDTO;
@@ -88,7 +88,7 @@ public class DefaultSyncWebfluxRAGFlowDocumentClient
     }
 
     @Override
-    public DownloadDocumentDTO downloadDocument(DownloadDocumentContext context) {
+    public DownloadHandle downloadDocument(DownloadDocumentContext context) {
         return this.tryDownloadDocument(
             context,
             Mono::block

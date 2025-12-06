@@ -141,14 +141,11 @@ public class UpdateDatasetPayload extends AbstractPayload {
      * Default: 0
      * Minimum: 0
      * Maximum: 100
-     *
-     * <p>
-     * ----------------------------------------------------------------
-     * <pagerank> - Message: <Input should be a valid integer> - Value: <None>
      */
     @JsonProperty("pagerank")
     @NotNull(message = "pagerank must not be null")
     private Integer pagerank;
+    // <pagerank> - Message: <Input should be a valid integer> - Value: <None>
 
     /**
      * The configuration settings for the dataset parser.

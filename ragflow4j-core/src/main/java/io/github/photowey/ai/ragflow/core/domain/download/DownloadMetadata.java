@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.download;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -26,30 +26,29 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
- * Download document.
+ * {@code DownloadDocumentMetadata}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#download-document">Download document</a>
- * @since 2025/11/30
+ * @since 2025/12/06
  */
-@Deprecated
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(fluent = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DownloadDocumentDTO implements Serializable {
+public class DownloadMetadata implements Serializable {
 
     private static final long serialVersionUID = 1827453946696218990L;
 
     private Integer code;
     private String message;
-
     private String filename;
-    private byte[] data;
+    private String contentType;
 
     // ----------------------------------------------------------------
 
@@ -60,5 +59,4 @@ public class DownloadDocumentDTO implements Serializable {
 
         return RAGFlowDictionary.ErrorCode.determineIsOk(this.code);
     }
-
 }
