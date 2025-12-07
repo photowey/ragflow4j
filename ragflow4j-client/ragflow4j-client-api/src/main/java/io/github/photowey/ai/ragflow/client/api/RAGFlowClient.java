@@ -31,4 +31,11 @@ public interface RAGFlowClient {
      * @return {@link RAGFlowDatasetClient}
      */
     RAGFlowDatasetClient dataset();
+
+    /**
+     * Get the document client {@link RAGFlowDocumentClient} instance.
+     *
+     * @return {@link RAGFlowDocumentClient}
+     */
+    RAGFlowDocumentClient document();
 }

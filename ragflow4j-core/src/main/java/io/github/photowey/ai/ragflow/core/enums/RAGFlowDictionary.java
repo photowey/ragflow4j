@@ -589,7 +589,7 @@ public enum RAGFlowDictionary {
          * ```
          * </pre>
          */
-        STOP_PARSE_DOCUMENTS("/api/v1/datasets/{dataset_id}/chunks", "DELETE"),
+        STOP_PARSING_DOCUMENTS("/api/v1/datasets/{dataset_id}/chunks", "DELETE"),
 
         // ---------------------------------------------------------------- FILE MANAGEMENT WITHIN DATASET
         // ---------------------------------------------------------------- CHUNK MANAGEMENT WITHIN DATASET

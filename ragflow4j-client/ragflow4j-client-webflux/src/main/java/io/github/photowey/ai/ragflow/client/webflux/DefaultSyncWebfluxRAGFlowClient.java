@@ -17,6 +17,7 @@ package io.github.photowey.ai.ragflow.client.webflux;
 
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
+import io.github.photowey.ai.ragflow.client.webflux.document.WebfluxRAGFlowDocumentClient;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 
 /**
@@ -27,20 +28,28 @@ import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
  * @since 2025/11/23
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public class DefaultSyncWebfluxRAGFlowClient extends AbstractRAGFlowClient implements SyncWebfluxRAGFlowClient {
+public class DefaultSyncWebfluxRAGFlowClient extends AbstractWebfluxRAGFlowClient implements SyncWebfluxRAGFlowClient {
 
     private final WebfluxRAGFlowDatasetClient dataset;
+    private final WebfluxRAGFlowDocumentClient document;
 
     public DefaultSyncWebfluxRAGFlowClient(
         WebfluxRAGFlowDatasetClient dataset,
+        WebfluxRAGFlowDocumentClient document,
         RAGFlowPropertiesGetter getter,
         RAGFlowWebClientFactory factory) {
         super(getter, factory);
         this.dataset = dataset;
+        this.document = document;
     }
 
     @Override
     public WebfluxRAGFlowDatasetClient dataset() {
         return this.dataset;
+    }
+
+    @Override
+    public WebfluxRAGFlowDocumentClient document() {
+        return this.document;
     }
 }

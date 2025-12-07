@@ -16,9 +16,14 @@
 package io.github.photowey.ai.ragflow.client.webflux.core.factory;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,6 +33,7 @@ import io.github.photowey.ai.ragflow.core.constant.RAGFlowConstants;
 import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowProperties;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
+import io.github.photowey.ai.ragflow.core.util.Functions;
 
 import reactor.netty.http.client.HttpClient;
 
@@ -43,18 +49,28 @@ public class RAGFlowWebClientFactory {
 
     private final Map<String, WebClient> clientCache = new ConcurrentHashMap<>();
 
+    private static final List<WebClientBuilderCustomizer> GLOBAL_CUSTOMIZERS = new ArrayList<>();
+
     // ----------------------------------------------------------------
 
-    public WebClient createFormdataWebClient(String deployKey, RAGFlowPropertiesGetter getter) {
+    public static void register(@NotNull WebClientBuilderCustomizer customizer) {
+        GLOBAL_CUSTOMIZERS.add(Objects.requireNonNull(customizer));
+    }
+
+    // ----------------------------------------------------------------
+
+    public WebClient createFormdataWebClient(
+        @NotNull String deployKey,
+        @NotNull RAGFlowPropertiesGetter getter) {
         return this.clientCache.computeIfAbsent(deployKey,
-            (key) -> this.createFormdataWebClient(key, getter, RAGFlowWebClientFactory::nothing)
+            (key) -> this.createFormdataWebClient(key, getter, Functions::noop)
         );
     }
 
     public WebClient createFormdataWebClient(
-        String deployKey,
-        RAGFlowPropertiesGetter getter,
-        Consumer<HttpClient> clientFx) {
+        @NotNull String deployKey,
+        @NotNull RAGFlowPropertiesGetter getter,
+        @NotNull Consumer<HttpClient> clientFx) {
         return this.tryCreateWebClient(deployKey, getter, clientFx, (builder) -> {
             builder.defaultHeader(RAGFlowConstants.Header.CONTENT_TYPE, RAGFlowConstants.Header.MULTIPART_FORM_DATA);
         });
@@ -62,13 +78,18 @@ public class RAGFlowWebClientFactory {
 
     // ----------------------------------------------------------------
 
-    public WebClient createWebClient(String deployKey, RAGFlowPropertiesGetter getter) {
-        return this.tryCreateWebClient(deployKey, getter, RAGFlowWebClientFactory::nothing, (builder) -> {
+    public WebClient createWebClient(
+        @NotNull String deployKey,
+        @NotNull RAGFlowPropertiesGetter getter) {
+        return this.tryCreateWebClient(deployKey, getter, Functions::noop, (builder) -> {
             builder.defaultHeader(RAGFlowConstants.Header.CONTENT_TYPE, RAGFlowConstants.Header.APPLICATION_JSON);
         });
     }
 
-    public WebClient createWebClient(String deployKey, RAGFlowPropertiesGetter getter, Consumer<HttpClient> clientFx) {
+    public WebClient createWebClient(
+        @NotNull String deployKey,
+        @NotNull RAGFlowPropertiesGetter getter,
+        @NotNull Consumer<HttpClient> clientFx) {
         return this.tryCreateWebClient(deployKey, getter, clientFx, (builder) -> {
             builder.defaultHeader(RAGFlowConstants.Header.CONTENT_TYPE, RAGFlowConstants.Header.APPLICATION_JSON);
         });
@@ -77,10 +98,10 @@ public class RAGFlowWebClientFactory {
     // ----------------------------------------------------------------
 
     private WebClient tryCreateWebClient(
-        String deployKey,
-        RAGFlowPropertiesGetter getter,
-        Consumer<HttpClient> clientFx,
-        Consumer<WebClient.Builder> builderFx) {
+        @NotNull String deployKey,
+        @NotNull RAGFlowPropertiesGetter getter,
+        @NotNull Consumer<HttpClient> clientFx,
+        @NotNull Consumer<WebClient.Builder> builderFx) {
         RAGFlowProperties.Server server = getter.get().tryAcquireServer(deployKey).orElseThrow(() -> {
             return new RAGFlowException(MessageConstants.RAGFLOW_DEPLOYMENT_KEY_INVALID, deployKey);
         });
@@ -92,19 +113,18 @@ public class RAGFlowWebClientFactory {
 
         WebClient.Builder builder = WebClient.builder()
             .baseUrl(server.address())
+            .codecs(cc ->
+                cc.defaultCodecs().maxInMemorySize(server.codec().maxInMemorySize())
+            )
             .clientConnector(new ReactorClientHttpConnector(httpClient))
             .defaultHeader(
                 RAGFlowConstants.Header.AUTHORIZATION, RAGFlowConstants.Header.BEARER + " " + server.apiKey()
             );
 
+        GLOBAL_CUSTOMIZERS.forEach(it -> it.customize(builder));
+
         builderFx.accept(builder);
 
         return builder.build();
-    }
-
-    // ----------------------------------------------------------------
-
-    public static <T> void nothing(T t) {
-
     }
 }

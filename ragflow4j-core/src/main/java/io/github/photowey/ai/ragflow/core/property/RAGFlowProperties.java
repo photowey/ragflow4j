@@ -128,6 +128,9 @@ public class RAGFlowProperties implements Serializable {
 
         private Integer timeout = 30_000;
 
+        @Valid
+        private Codec codec = new Codec();
+
         // ----------------------------------------------------------------
 
         public String address() {
@@ -144,6 +147,10 @@ public class RAGFlowProperties implements Serializable {
             }
 
             return deffaultValue;
+        }
+
+        public Codec codec() {
+            return codec;
         }
     }
 
@@ -166,6 +173,45 @@ public class RAGFlowProperties implements Serializable {
 
         public String datasetId() {
             return datasetId;
+        }
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Codec implements Serializable {
+
+        private static final long serialVersionUID = 4034814568655464155L;
+
+        private static final int DEFAULT_MAX_IN_MEMORY_SIZE = 256;
+
+        /**
+         * Configure a limit on the number of bytes that can be buffered whenever
+         * the input stream needs to be aggregated. This can be a result of
+         * decoding to a single {@code DataBuffer},
+         * {@code java.nio.ByteBuffer ByteBuffer}, {@code byte[]},
+         * {@code org.springframework.core.io.Resource Resource}, {@code String}, etc.
+         * It can also occur when splitting the input stream, e.g. delimited text,
+         * in which case the limit applies to data buffered between delimiters.
+         *
+         * <p>
+         * By default this is not set, in which case individual codec defaults
+         * apply. All codecs are limited to 256K by default.
+         *
+         * <p>
+         * {@code org.springframework.http.codec.CodecConfigurer.DefaultCodecs#maxInMemorySize(int)}
+         */
+        private int maxInMemorySize = DEFAULT_MAX_IN_MEMORY_SIZE * RAGFlowConstants.Bytes.KB;
+
+        // ----------------------------------------------------------------
+
+        public int maxInMemorySize() {
+            if (this.maxInMemorySize <= 0) {
+                return DEFAULT_MAX_IN_MEMORY_SIZE * RAGFlowConstants.Bytes.KB;
+            }
+
+            return this.maxInMemorySize;
         }
     }
 

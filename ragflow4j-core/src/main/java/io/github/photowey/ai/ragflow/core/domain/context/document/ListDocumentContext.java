@@ -15,8 +15,10 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.context.document;
 
+import jakarta.validation.Valid;
+
 import io.github.photowey.ai.ragflow.core.domain.context.AbstractContext;
-import io.github.photowey.ai.ragflow.core.domain.query.dataset.ListDocumentQuery;
+import io.github.photowey.ai.ragflow.core.domain.query.document.ListDocumentQuery;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,5 +45,6 @@ public class ListDocumentContext extends AbstractContext {
 
     private static final long serialVersionUID = -6815237253155371589L;
 
+    @Valid
     private ListDocumentQuery query;
 }

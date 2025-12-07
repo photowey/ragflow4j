@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.client.webflux.dataset;
+package io.github.photowey.ai.ragflow.client.webflux.document;
+
+// @formatter:off
 
 /**
- * {@code WebfluxAsyncRAGFlowDatasetClient}.
+ * {@code WebfluxSyncRAGFlowDocumentClient}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @since 2025/11/30
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public interface WebfluxAsyncRAGFlowDatasetClient {
-    // do nothing now.
-}
+public interface SyncWebfluxRAGFlowDocumentClient extends WebfluxRAGFlowDocumentClient{ }
+
+// @formatter:on

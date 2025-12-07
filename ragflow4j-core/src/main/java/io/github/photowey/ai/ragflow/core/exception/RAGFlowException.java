@@ -25,7 +25,7 @@ import io.github.photowey.ai.ragflow.core.formatter.StringFormatter;
  * @since 2025/11/23
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public class RAGFlowException extends RootException {
+public class RAGFlowException extends RuntimeException {
 
     // @formatter:off
 
