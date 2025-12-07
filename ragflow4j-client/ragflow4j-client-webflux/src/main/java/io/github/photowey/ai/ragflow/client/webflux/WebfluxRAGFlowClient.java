@@ -17,6 +17,7 @@ package io.github.photowey.ai.ragflow.client.webflux;
 
 import io.github.photowey.ai.ragflow.client.api.RAGFlowClient;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
+import io.github.photowey.ai.ragflow.client.webflux.document.WebfluxRAGFlowDocumentClient;
 
 /**
  * {@code WebfluxRAGFlowClient}.
@@ -35,5 +36,13 @@ public interface WebfluxRAGFlowClient extends RAGFlowClient {
      */
     @Override
     WebfluxRAGFlowDatasetClient dataset();
+
+    /**
+     * Get the document client {@link WebfluxRAGFlowDocumentClient} instance.
+     *
+     * @return {@link WebfluxRAGFlowDocumentClient}
+     */
+    @Override
+    WebfluxRAGFlowDocumentClient document();
 }
 

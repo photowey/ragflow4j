@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import io.github.photowey.ai.ragflow.core.domain.dto.EmptyDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,6 +37,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = true)
-public class ParseDocumentDTO extends EmptyDTO implements Serializable { }
+public class ParseDocumentDTO extends MetadataDTO implements Serializable { }
 
 // @formatter:on

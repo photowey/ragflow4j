@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto;
-
-import java.io.Serializable;
-
-import lombok.Data;
-
-// @formatter:off
+package io.github.photowey.ai.ragflow.client.webflux.dataset;
 
 /**
- * {@code EmptyDTO}.
+ * {@code AsyncWebfluxRAGFlowDatasetClient}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/26
+ * @since 2025/11/23
  */
-@Data
-public class EmptyDTO implements Serializable { }
-
-// @formatter:on
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
+public interface AsyncWebfluxRAGFlowDatasetClient {
+    // do nothing now.
+}

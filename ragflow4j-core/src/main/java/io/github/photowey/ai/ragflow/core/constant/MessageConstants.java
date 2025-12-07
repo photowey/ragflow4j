@@ -32,4 +32,18 @@ public interface MessageConstants {
     String LIST_DATASET_FAILED = "Failed to list dataset: ";
     String GET_KNOWLEDGE_GRAPH_FAILED = "Failed to get knowledge graph: ";
     String DELETE_KNOWLEDGE_GRAPH_FAILED = "Failed to delete knowledge graph: ";
+
+    // ----------------------------------------------------------------
+
+    String UPLOAD_DOCUMENT_DOCUMENT_LIST_EMPTY = "Documents must not be empty";
+    String UPLOAD_DOCUMENTS_FAILED = "Failed to upload documents: ";
+    String UPDATE_DOCUMENT_FAILED = "Failed to update document: ";
+    String LIST_DOCUMENTS_FAILED = "Failed to list documents: ";
+    String DELETE_DOCUMENTS_FAILED = "Failed to delete documents: ";
+    String PARSE_DOCUMENTS_FAILED = "Failed to parse documents: ";
+    String STOP_PARSING_DOCUMENTS_FAILED = "Failed to stop parsing documents: ";
+
+    // ----------------------------------------------------------------
+
+    String POLLING_PARSING_STATUS_FAILED = "The document ID (%s) is invalid.";
 }

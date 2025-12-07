@@ -15,7 +15,7 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.dto.dataset;
 
-import io.github.photowey.ai.ragflow.core.domain.dto.EmptyDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +32,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DeleteDatasetDTO extends EmptyDTO { }
+public class DeleteDatasetDTO extends MetadataDTO { }
 
 // @formatter:on

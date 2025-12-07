@@ -40,5 +40,5 @@ $ source ~/.bashrc
 ## 1.2.`Act actions`
 
 ```shell
-$ act --action-offline-mode -v -W .github/workflows/maven.act.yml -P ubuntu-latest=photowey/ubuntu:act-latest
+$ act --action-offline-mode -v -W .act/workflows/maven.act.yml -P ubuntu-latest=photowey/ubuntu:act-latest
 ```

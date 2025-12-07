@@ -53,4 +53,19 @@ public interface RAGFlowConstants {
             return System.getProperty(RAGFLOW_PREFIX, RAGFLOW_PREFIX);
         }
     }
+
+    /**
+     * Binary data size units (base-1024).
+     * Note: KB = 1024 bytes, not 1000.
+     */
+    interface Bytes {
+        int BYTE = 1;
+        int UNIT = 1024;
+        int KB = BYTE * UNIT;
+        int MB = KB * UNIT;
+        long GB = MB * UNIT;
+        long TB = GB * UNIT;
+        long PB = TB * UNIT;
+        long EB = PB * UNIT;
+    }
 }

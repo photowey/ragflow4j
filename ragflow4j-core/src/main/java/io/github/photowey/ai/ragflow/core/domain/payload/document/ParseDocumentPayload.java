@@ -15,15 +15,19 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.payload.document;
 
-import java.io.Serializable;
 import java.util.List;
+
+import jakarta.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.github.photowey.ai.ragflow.core.domain.payload.AbstractPayload;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -38,11 +42,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ParseDocumentPayload implements Serializable {
-
+public class ParseDocumentPayload extends AbstractPayload {
     private static final long serialVersionUID = -8908564721925469325L;
 
+    @NotEmpty(message = "Document IDs must not be empty")
     @JsonProperty("document_ids")
     private List<String> documentIds;
 }

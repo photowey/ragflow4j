@@ -16,6 +16,7 @@
 package io.github.photowey.ai.ragflow.core.domain.query;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,4 +51,24 @@ public abstract class AbstractQuery implements Serializable {
      * The search keywords of the $target(dataset|document|...) to retrieve.
      */
     protected String keywords;
+
+    // ----------------------------------------------------------------
+
+    public String id() {
+        return id;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public String keywords() {
+        return keywords;
+    }
+
+    public void ensureIdNotBlank() {
+        if (Objects.isNull(this.id()) || this.id().trim().isEmpty()) {
+            throw new IllegalArgumentException("DocumentId cannot be null");
+        }
+    }
 }

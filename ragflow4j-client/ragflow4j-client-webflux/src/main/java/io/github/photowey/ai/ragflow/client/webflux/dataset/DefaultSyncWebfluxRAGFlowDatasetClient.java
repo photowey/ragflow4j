@@ -41,17 +41,17 @@ import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 import reactor.core.publisher.Mono;
 
 /**
- * {@code DefaultWebfluxSyncRAGFlowDatasetClient}.
+ * {@code DefaultSyncWebfluxRAGFlowDatasetClient}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
  * @since 2025/11/23
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public class DefaultWebfluxSyncRAGFlowDatasetClient extends AbstractRAGFlowDatasetClient
-    implements WebfluxSyncRAGFlowDatasetClient {
+public class DefaultSyncWebfluxRAGFlowDatasetClient extends AbstractWebfluxRAGFlowDatasetClient
+    implements SyncWebfluxRAGFlowDatasetClient {
 
-    public DefaultWebfluxSyncRAGFlowDatasetClient(
+    public DefaultSyncWebfluxRAGFlowDatasetClient(
         RAGFlowPropertiesGetter getter,
         RAGFlowWebClientFactory factory) {
         super(getter, factory);

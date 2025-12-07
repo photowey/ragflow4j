@@ -21,9 +21,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -38,8 +41,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ListDocumentDTO implements Serializable {
+public class ListDocumentDTO extends MetadataDTO implements Serializable {
 
     private static final long serialVersionUID = 6684713032831363409L;
 
@@ -48,4 +52,14 @@ public class ListDocumentDTO implements Serializable {
 
     @JsonProperty("docs")
     private List<DocumentDTO> documents;
+
+    // ----------------------------------------------------------------
+
+    public Long total() {
+        return total;
+    }
+
+    public List<DocumentDTO> documents() {
+        return documents;
+    }
 }

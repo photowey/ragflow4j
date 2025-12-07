@@ -13,18 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.client.webflux.dataset;
+package io.github.photowey.ai.ragflow.core.util;
 
-// @formatter:off
+import java.util.function.Consumer;
 
 /**
- * {@code WebfluxSyncRAGFlowDatasetClient}.
+ * {@code Functions}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @since 2025/12/06
  */
-@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
-public interface WebfluxSyncRAGFlowDatasetClient extends WebfluxRAGFlowDatasetClient { }
+public final class Functions {
 
-// @formatter:on
+    // @formatter:off
+
+    public static final Consumer<?> NOOP = Functions::noop;
+
+    // @formatter:on
+
+
+    private Functions() {
+        AssertionErrors.throwz(Functions.class);
+    }
+
+    // @formatter:off
+
+    public static <T> void noop(T t) { }
+
+    // @formatter:on
+}

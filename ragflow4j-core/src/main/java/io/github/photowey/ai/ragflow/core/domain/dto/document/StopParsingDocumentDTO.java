@@ -13,41 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.exception;
+package io.github.photowey.ai.ragflow.core.domain.dto.document;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+
+// @formatter:off
 
 /**
- * {@code RootException}.
+ * Stop parsing documents.
  *
  * @author photowey
  * @version 2025.0.22.0.1
- * @since 2025/11/23
+ * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#stop-parsing-documents">Stop parsing documents</a>
+ * @since 2025/11/30
  */
 @Data
-@Accessors(fluent = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = true)
-public class RootException extends RuntimeException {
+public class StopParsingDocumentDTO extends MetadataDTO { }
 
-    public RootException() {
-    }
-
-    public RootException(String message) {
-        super(message);
-    }
-
-    public RootException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RootException(Throwable cause) {
-        super(cause);
-    }
-
-    public RootException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-}
-
+// @formatter:on
