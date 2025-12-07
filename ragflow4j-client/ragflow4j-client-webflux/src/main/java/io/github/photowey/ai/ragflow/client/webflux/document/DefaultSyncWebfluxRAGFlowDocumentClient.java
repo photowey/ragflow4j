@@ -16,6 +16,8 @@
 package io.github.photowey.ai.ragflow.client.webflux.document;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -25,17 +27,23 @@ import io.github.photowey.ai.ragflow.core.domain.context.document.DeleteDocument
 import io.github.photowey.ai.ragflow.core.domain.context.document.DownloadDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.ListDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.ParseDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.PollingParsingStatusDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.StopParsingDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UpdateDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.download.DownloadHandle;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.DeleteDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.DocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.ListDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.ParseDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.PollingParsingStatusDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.StopParsingDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.UpdateDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.UploadDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.model.response.RAGFlowResponse;
+import io.github.photowey.ai.ragflow.core.domain.query.document.ListDocumentQuery;
+import io.github.photowey.ai.ragflow.core.domain.query.document.PollingParsingStatusDocumentQuery;
+import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowPropertiesGetter;
 
 import reactor.core.publisher.Mono;
@@ -111,7 +119,7 @@ public class DefaultSyncWebfluxRAGFlowDocumentClient
     }
 
     @Override
-    public DeleteDocumentDTO deleteDocuments(DeleteDocumentContext context) {
+    public Optional<DeleteDocumentDTO> deleteDocuments(DeleteDocumentContext context) {
         // @formatter:off
         RAGFlowResponse<DeleteDocumentDTO> response = this.tryDeleteDocuments(
             context,
@@ -120,13 +128,13 @@ public class DefaultSyncWebfluxRAGFlowDocumentClient
         );
         // @formatter:on
 
-        return this.unwrap(response, () ->
+        return Optional.ofNullable(this.unwrap(response, () ->
             MessageConstants.DELETE_DOCUMENTS_FAILED
-        );
+        ));
     }
 
     @Override
-    public ParseDocumentDTO parseDocuments(ParseDocumentContext context) {
+    public Optional<ParseDocumentDTO> parseDocuments(ParseDocumentContext context) {
         // @formatter:off
         RAGFlowResponse<ParseDocumentDTO> response = this.tryParseDocuments(
             context,
@@ -135,13 +143,13 @@ public class DefaultSyncWebfluxRAGFlowDocumentClient
         );
         // @formatter:on
 
-        return this.unwrap(response, () ->
+        return Optional.ofNullable(this.unwrap(response, () ->
             MessageConstants.PARSE_DOCUMENTS_FAILED
-        );
+        ));
     }
 
     @Override
-    public StopParsingDocumentDTO stopParsingDocuments(StopParsingDocumentContext context) {
+    public Optional<StopParsingDocumentDTO> stopParsingDocuments(StopParsingDocumentContext context) {
         // @formatter:off
         RAGFlowResponse<StopParsingDocumentDTO> response = this.tryStopParsingDocuments(
             context,
@@ -150,8 +158,37 @@ public class DefaultSyncWebfluxRAGFlowDocumentClient
         );
         // @formatter:on
 
-        return this.unwrap(response, () ->
-            MessageConstants.STOP_PARSING_DOCUMENTS_FAILED
+        return Optional.ofNullable(
+            this.unwrap(response, () ->
+                MessageConstants.STOP_PARSING_DOCUMENTS_FAILED
+            )
         );
+    }
+
+    @Override
+    public PollingParsingStatusDocumentDTO pollingParsingStatus(PollingParsingStatusDocumentContext context) {
+        PollingParsingStatusDocumentQuery parsingQuery = context.query();
+        parsingQuery.ensureIdNotBlank();
+
+        ListDocumentQuery query = ListDocumentQuery.builder()
+            .id(parsingQuery.id())
+            .build();
+
+        ListDocumentContext listContext = ListDocumentContext.builder()
+            .deployKey(context.deployKey())
+            .datasetId(context.datasetId())
+            .query(query)
+            .build();
+
+        ListDocumentDTO documents = this.listDocuments(listContext);
+        if (Objects.isNull(documents.documents()) || documents.documents().isEmpty()) {
+            throw new RAGFlowException(MessageConstants.POLLING_PARSING_STATUS_FAILED, parsingQuery.id());
+        }
+        DocumentDTO sentinel = documents.documents().get(0);
+
+        return PollingParsingStatusDocumentDTO.builder()
+            .documentId(sentinel.getId())
+            .status(sentinel.getRun())
+            .build();
     }
 }

@@ -76,7 +76,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     // ----------------------------------------------------------------
 
-    public <T, D> D tryUploadDocuments(
+    protected <T, D> D tryUploadDocuments(
         UploadDocumentContext context,
         Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
         Function<Mono<RAGFlowResponse<T>>, D> fx) {
@@ -99,7 +99,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     // ----------------------------------------------------------------
 
-    public <T, D> D tryUpdateDocument(
+    protected <T, D> D tryUpdateDocument(
         UpdateDocumentContext context,
         Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
         Function<Mono<RAGFlowResponse<T>>, D> fx) {
@@ -116,7 +116,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     // ----------------------------------------------------------------
 
-    public <D> D tryDownloadDocument(
+    protected <D> D tryDownloadDocument(
         DownloadDocumentContext context,
         Function<Mono<DownloadHandle>, D> fx) {
         WebClient client = this.factory.createWebClient(context.deployKey(), this.getter);
@@ -141,19 +141,16 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
             return fx.apply(rvt);
         }
 
+        /*
+         * <pre>
+         * {
+         *     "code": 102,
+         *     "message": "You do not own the dataset 7898da028a0511efbf750242ac1220005."
+         * }
+         * </pre>
+         */
         if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
-            Mono<DownloadHandle> rvt = response.bodyToMono(Map.class)
-                .map(body -> this.extractBusinessError(body, status))
-                .map(meta -> (DownloadHandle) new ErrorDownloadHandle(meta))
-                .switchIfEmpty(Mono.defer(() -> {
-                    DownloadMetadata meta = DownloadMetadata.builder()
-                        .code(status.value())
-                        .message("HTTP " + status.value() + " with empty response body")
-                        .build();
-
-                    return Mono.just(new ErrorDownloadHandle(meta));
-                }));
-
+            Mono<DownloadHandle> rvt = this.handleBadRequest(response, status);
             return fx.apply(rvt);
         }
 
@@ -172,9 +169,10 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
         return fx.apply(handleMono);
     }
 
+
     // ----------------------------------------------------------------
 
-    public <T, D> D tryListDocuments(
+    protected <T, D> D tryListDocuments(
         ListDocumentContext context,
         Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
         Function<Mono<RAGFlowResponse<T>>, D> fx) {
@@ -195,7 +193,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     // ----------------------------------------------------------------
 
-    public <T, D> D tryDeleteDocuments(
+    protected <T, D> D tryDeleteDocuments(
         DeleteDocumentContext context,
         Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
         Function<Mono<RAGFlowResponse<T>>, D> fx) {
@@ -212,7 +210,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     // ----------------------------------------------------------------
 
-    public <T, D> D tryParseDocuments(
+    protected <T, D> D tryParseDocuments(
         ParseDocumentContext context,
         Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
         Function<Mono<RAGFlowResponse<T>>, D> fx) {
@@ -229,7 +227,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
 
     // ----------------------------------------------------------------
 
-    public <T, D> D tryStopParsingDocuments(
+    protected <T, D> D tryStopParsingDocuments(
         StopParsingDocumentContext context,
         Supplier<ParameterizedTypeReference<RAGFlowResponse<T>>> ref,
         Function<Mono<RAGFlowResponse<T>>, D> fx) {
@@ -269,17 +267,7 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
             .orElse(MediaType.APPLICATION_OCTET_STREAM);
 
         if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
-            return response.bodyToMono(Map.class)
-                .map(body -> this.extractBusinessError(body, status))
-                .map(meta -> (DownloadHandle) new ErrorDownloadHandle(meta))
-                .switchIfEmpty(Mono.defer(() -> {
-                    DownloadMetadata meta = DownloadMetadata.builder()
-                        .code(status.value())
-                        .message("HTTP " + status.value() + " with empty response body")
-                        .build();
-
-                    return Mono.just(new ErrorDownloadHandle(meta));
-                }));
+            return this.handleBadRequest(response, status);
         }
 
         DownloadMetadata meta = DownloadMetadata.builder()
@@ -316,5 +304,19 @@ public abstract class AbstractWebfluxRAGFlowDocumentClient extends AbstractWebfl
             .code(RAGFlowDictionary.ErrorCode.BAD_REQUEST.code())
             .message(errorMsg)
             .build();
+    }
+
+    private Mono<DownloadHandle> handleBadRequest(ClientResponse response, HttpStatus status) {
+        return response.bodyToMono(Map.class)
+            .map(body -> this.extractBusinessError(body, status))
+            .map(meta -> (DownloadHandle) new ErrorDownloadHandle(meta))
+            .switchIfEmpty(Mono.defer(() -> {
+                DownloadMetadata meta = DownloadMetadata.builder()
+                    .code(status.value())
+                    .message("HTTP " + status.value() + " with empty response body")
+                    .build();
+
+                return Mono.just(new ErrorDownloadHandle(meta));
+            }));
     }
 }

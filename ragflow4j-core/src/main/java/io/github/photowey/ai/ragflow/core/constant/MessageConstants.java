@@ -42,4 +42,8 @@ public interface MessageConstants {
     String DELETE_DOCUMENTS_FAILED = "Failed to delete documents: ";
     String PARSE_DOCUMENTS_FAILED = "Failed to parse documents: ";
     String STOP_PARSING_DOCUMENTS_FAILED = "Failed to stop parsing documents: ";
+
+    // ----------------------------------------------------------------
+
+    String POLLING_PARSING_STATUS_FAILED = "The document ID (%s) is invalid.";
 }

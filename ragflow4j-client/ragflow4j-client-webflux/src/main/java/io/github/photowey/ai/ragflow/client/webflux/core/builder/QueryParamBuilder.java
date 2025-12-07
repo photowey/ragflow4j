@@ -20,7 +20,7 @@ import org.springframework.util.MultiValueMap;
 
 import io.github.photowey.ai.ragflow.core.domain.query.AbstractPaginationQuery;
 import io.github.photowey.ai.ragflow.core.domain.query.dataset.ListDatasetQuery;
-import io.github.photowey.ai.ragflow.core.domain.query.dataset.ListDocumentQuery;
+import io.github.photowey.ai.ragflow.core.domain.query.document.ListDocumentQuery;
 
 /**
  * {@code QueryParamBuilder}.

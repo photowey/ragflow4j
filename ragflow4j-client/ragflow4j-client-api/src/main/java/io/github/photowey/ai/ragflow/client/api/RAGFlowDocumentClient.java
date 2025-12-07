@@ -16,6 +16,7 @@
 package io.github.photowey.ai.ragflow.client.api;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -23,6 +24,7 @@ import io.github.photowey.ai.ragflow.core.domain.context.document.DeleteDocument
 import io.github.photowey.ai.ragflow.core.domain.context.document.DownloadDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.ListDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.ParseDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.PollingParsingStatusDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.StopParsingDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UpdateDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
@@ -31,6 +33,7 @@ import io.github.photowey.ai.ragflow.core.domain.dto.document.DeleteDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.DownloadDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.ListDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.ParseDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.PollingParsingStatusDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.StopParsingDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.UpdateDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.UploadDocumentDTO;
@@ -231,7 +234,7 @@ public interface RAGFlowDocumentClient {
      * @param context {@link DeleteDocumentContext}
      * @return {@link DeleteDocumentDTO}
      */
-    DeleteDocumentDTO deleteDocuments(@NotNull DeleteDocumentContext context);
+    Optional<DeleteDocumentDTO> deleteDocuments(@NotNull DeleteDocumentContext context);
 
     /**
      * Parse documents.
@@ -270,7 +273,7 @@ public interface RAGFlowDocumentClient {
      * @param context {@link ParseDocumentContext}
      * @return {@link ParseDocumentDTO}
      */
-    ParseDocumentDTO parseDocuments(@NotNull ParseDocumentContext context);
+    Optional<ParseDocumentDTO> parseDocuments(@NotNull ParseDocumentContext context);
 
     /**
      * Stop parsing documents.
@@ -309,5 +312,13 @@ public interface RAGFlowDocumentClient {
      * @param context {@link StopParsingDocumentContext}
      * @return {@link StopParsingDocumentDTO}
      */
-    StopParsingDocumentDTO stopParsingDocuments(@NotNull StopParsingDocumentContext context);
+    Optional<StopParsingDocumentDTO> stopParsingDocuments(@NotNull StopParsingDocumentContext context);
+
+    /**
+     * Polling parsing status.
+     *
+     * @param context {@link PollingParsingStatusDocumentContext}
+     * @return {@link PollingParsingStatusDocumentDTO}
+     */
+    PollingParsingStatusDocumentDTO pollingParsingStatus(@NotNull PollingParsingStatusDocumentContext context);
 }

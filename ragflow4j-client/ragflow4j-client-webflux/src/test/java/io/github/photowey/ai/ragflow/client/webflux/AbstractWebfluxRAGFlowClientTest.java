@@ -20,20 +20,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
+import io.github.photowey.ai.ragflow.client.webflux.dataset.DefaultSyncWebfluxRAGFlowDatasetClient;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
+import io.github.photowey.ai.ragflow.client.webflux.document.DefaultSyncWebfluxRAGFlowDocumentClient;
+import io.github.photowey.ai.ragflow.client.webflux.document.WebfluxRAGFlowDocumentClient;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.CreateDatasetContext;
 import io.github.photowey.ai.ragflow.core.domain.context.dataset.DeleteDatasetContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.UploadDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.payload.dataset.CreateDatasetPayload;
 import io.github.photowey.ai.ragflow.core.domain.payload.dataset.DeleteDatasetPayload;
+import io.github.photowey.ai.ragflow.core.domain.payload.document.UploadDocumentPayload;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
 import io.github.photowey.ai.ragflow.core.property.RAGFlowProperties;
 
@@ -146,6 +155,81 @@ public abstract class AbstractWebfluxRAGFlowClientTest {
 
             return resource.getInputStream().readAllBytes();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void walk(
+        String filename,
+        String documentName,
+        TripleConsumer<CreateDatasetDTO, UploadDocumentDTO, WebfluxRAGFlowDocumentClient> fx) {
+
+        this.walk(filename, filename, true, fx);
+    }
+
+    protected void walk(
+        String filename,
+        String documentName,
+        boolean deleteDataset,
+        TripleConsumer<CreateDatasetDTO, UploadDocumentDTO, WebfluxRAGFlowDocumentClient> fx) {
+        WebfluxRAGFlowDatasetClient client = new DefaultSyncWebfluxRAGFlowDatasetClient(
+            () -> properties,
+            new RAGFlowWebClientFactory()
+        );
+
+        CreateDatasetDTO dataset = tryCreateDataset(client);
+        Resource pdf = new ClassPathResource("dev/pdf/" + filename);
+        byte[] bytes = readAllBytes(pdf);
+
+        UploadDocumentPayload payload = UploadDocumentPayload.builder()
+            .documents(List.of(
+                UploadDocumentPayload.Document.builder()
+                    .name(documentName)
+                    .originalName(filename)
+                    .data(bytes)
+                    .build()
+            ))
+            .build();
+
+        UploadDocumentContext context = UploadDocumentContext.builder()
+            .deployKey(DEPLOY_KEY)
+            .datasetId(dataset.id())
+            .payload(payload)
+            .build();
+
+        WebfluxRAGFlowDocumentClient documentClient = new DefaultSyncWebfluxRAGFlowDocumentClient(
+            () -> properties,
+            new RAGFlowWebClientFactory()
+        );
+
+        List<UploadDocumentDTO> documents = documentClient.uploadDocuments(context);
+        Assertions.assertNotNull(documents);
+        Assertions.assertEquals(1, documents.size());
+
+        UploadDocumentDTO sentinel = documents.get(0);
+
+        try {
+            fx.accept(dataset, sentinel, documentClient);
+        } finally {
+            if (deleteDataset) {
+                tryDeleteDataset(dataset.id(), client);
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------
+
+    @FunctionalInterface
+    public interface TripleConsumer<T, U, V> {
+        void accept(T t, U u, V v);
+    }
+
+    // ----------------------------------------------------------------
+
+    public static void sleep(long millis) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(millis);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

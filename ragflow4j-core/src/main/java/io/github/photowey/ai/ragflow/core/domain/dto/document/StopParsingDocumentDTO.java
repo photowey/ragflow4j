@@ -17,7 +17,7 @@ package io.github.photowey.ai.ragflow.core.domain.dto.document;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import io.github.photowey.ai.ragflow.core.domain.dto.EmptyDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +35,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @EqualsAndHashCode(callSuper = true)
-public class StopParsingDocumentDTO extends EmptyDTO { }
+public class StopParsingDocumentDTO extends MetadataDTO { }
 
 // @formatter:on

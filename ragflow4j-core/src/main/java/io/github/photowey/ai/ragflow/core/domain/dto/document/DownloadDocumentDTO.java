@@ -20,11 +20,13 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -40,8 +42,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DownloadDocumentDTO implements Serializable {
+@SuppressWarnings("all")
+public class DownloadDocumentDTO extends MetadataDTO implements Serializable {
 
     private static final long serialVersionUID = 1827453946696218990L;
 

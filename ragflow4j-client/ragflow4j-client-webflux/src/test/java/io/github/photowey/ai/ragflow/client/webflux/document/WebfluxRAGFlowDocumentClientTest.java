@@ -20,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.springframework.core.io.ClassPathResource;
@@ -29,16 +31,34 @@ import io.github.photowey.ai.ragflow.client.webflux.AbstractWebfluxRAGFlowClient
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.DefaultSyncWebfluxRAGFlowDatasetClient;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
+import io.github.photowey.ai.ragflow.core.domain.context.document.DeleteDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.DownloadDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.ListDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.ParseDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.PollingParsingStatusDocumentContext;
+import io.github.photowey.ai.ragflow.core.domain.context.document.StopParsingDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UpdateDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.context.document.UploadDocumentContext;
 import io.github.photowey.ai.ragflow.core.domain.download.DownloadHandle;
 import io.github.photowey.ai.ragflow.core.domain.dto.dataset.CreateDatasetDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.DeleteDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.DocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.ListDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.ParseDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.PollingParsingStatusDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.StopParsingDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.dto.document.UpdateDocumentDTO;
 import io.github.photowey.ai.ragflow.core.domain.dto.document.UploadDocumentDTO;
+import io.github.photowey.ai.ragflow.core.domain.payload.document.DeleteDocumentPayload;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.DownloadDocumentPayload;
+import io.github.photowey.ai.ragflow.core.domain.payload.document.ParseDocumentPayload;
+import io.github.photowey.ai.ragflow.core.domain.payload.document.StopParsingDocumentPayload;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.UpdateDocumentPayload;
 import io.github.photowey.ai.ragflow.core.domain.payload.document.UploadDocumentPayload;
+import io.github.photowey.ai.ragflow.core.domain.query.document.ListDocumentQuery;
+import io.github.photowey.ai.ragflow.core.domain.query.document.PollingParsingStatusDocumentQuery;
 import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
+import io.github.photowey.ai.ragflow.core.exception.RAGFlowException;
 
 /**
  * {@code WebfluxRAGFlowDocumentClientTest}.
@@ -236,7 +256,8 @@ class WebfluxRAGFlowDocumentClientTest extends AbstractWebfluxRAGFlowClientTest 
             .payload(updatePayload)
             .build();
 
-        documentClient.updateDocument(updateContext);
+        UpdateDocumentDTO dto = documentClient.updateDocument(updateContext);
+        Assertions.assertNotNull(dto);
 
         // ----------------------------------------------------------------
 
@@ -244,7 +265,7 @@ class WebfluxRAGFlowDocumentClientTest extends AbstractWebfluxRAGFlowClientTest 
     }
 
     //@Test
-    void testDownloadDocument() throws IOException, InterruptedException {
+    void testDownloadDocument() throws IOException {
         WebfluxRAGFlowDatasetClient client = new DefaultSyncWebfluxRAGFlowDatasetClient(
             () -> properties,
             new RAGFlowWebClientFactory()
@@ -324,4 +345,165 @@ class WebfluxRAGFlowDocumentClientTest extends AbstractWebfluxRAGFlowClientTest 
 
         tryDeleteDataset(dataset.id(), client);
     }
+
+    //@Test
+    void testListDocuments() {
+        String prefix = UUID.randomUUID().toString().replaceAll("-", "");
+        String filename = "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+        String documentName = prefix + "_" + "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+
+        this.walk(filename, documentName, (dataset, document, client) -> {
+            ListDocumentQuery query = ListDocumentQuery.builder()
+                .id(document.getId())
+                .build();
+
+            ListDocumentContext listContext = ListDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .query(query)
+                .build();
+
+            ListDocumentDTO listDocuments = client.listDocuments(listContext);
+
+            Assertions.assertNotNull(listDocuments);
+            Assertions.assertEquals(1, listDocuments.total());
+            DocumentDTO sentinelDocument = listDocuments.documents().get(0);
+            Assertions.assertEquals(filename, sentinelDocument.getName());
+        });
+    }
+
+    //@Test
+    void testDeleteDocuments() {
+        String prefix = UUID.randomUUID().toString().replaceAll("-", "");
+        String filename = "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+        String documentName = prefix + "_" + "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+
+        this.walk(filename, documentName, (dataset, document, client) -> {
+            DeleteDocumentPayload deletePayload = DeleteDocumentPayload.builder()
+                .documentIds(List.of(document.getId()))
+                .build();
+
+            DeleteDocumentContext deleteContext = DeleteDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .payload(deletePayload)
+                .build();
+
+            Optional<DeleteDocumentDTO> deleteDocumentOpt = client.deleteDocuments(deleteContext);
+            Assertions.assertTrue(deleteDocumentOpt.isEmpty());
+
+            // ----------------------------------------------------------------
+
+            ListDocumentQuery query = ListDocumentQuery.builder()
+                .id(document.getId())
+                .build();
+
+            ListDocumentContext listContext = ListDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .query(query)
+                .build();
+
+            // NOTES: You don't own the document b07d43fad33711f08f2fa2b9b5a62a89.
+            Assertions.assertThrows(RAGFlowException.class, () -> {
+                client.listDocuments(listContext);
+            });
+        });
+    }
+
+    //@Test
+    void testParseDocuments() {
+        String prefix = UUID.randomUUID().toString().replaceAll("-", "");
+        String filename = "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+        String documentName = prefix + "_" + "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+
+        this.walk(filename, documentName, false, (dataset, document, client) -> {
+            ParseDocumentPayload payload = ParseDocumentPayload.builder()
+                .documentIds(List.of(document.getId()))
+                .build();
+
+            ParseDocumentContext context = ParseDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .payload(payload)
+                .build();
+            Optional<ParseDocumentDTO> parseDocumentOpt = client.parseDocuments(context);
+            Assertions.assertTrue(parseDocumentOpt.isEmpty());
+        });
+    }
+
+    //@Test
+    void testStopParsingDocuments() {
+        String prefix = UUID.randomUUID().toString().replaceAll("-", "");
+        String filename = "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+        String documentName = prefix + "_" + "hotspot-virtual-machine-garbage-collection-tuning-guide.pdf";
+
+        this.walk(filename, documentName, false, (dataset, document, client) -> {
+            ParseDocumentPayload payload = ParseDocumentPayload.builder()
+                .documentIds(List.of(document.getId()))
+                .build();
+
+            ParseDocumentContext context = ParseDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .payload(payload)
+                .build();
+            Optional<ParseDocumentDTO> parseDocumentOpt = client.parseDocuments(context);
+            Assertions.assertTrue(parseDocumentOpt.isEmpty());
+
+            sleep(1_000L);
+
+            StopParsingDocumentPayload stopPayload = StopParsingDocumentPayload.builder()
+                .documentIds(List.of(document.getId()))
+                .build();
+
+            StopParsingDocumentContext stopContext = StopParsingDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .payload(stopPayload)
+                .build();
+
+            Optional<StopParsingDocumentDTO> stopParsingDocumentOpt = client.stopParsingDocuments(stopContext);
+            Assertions.assertTrue(stopParsingDocumentOpt.isEmpty());
+
+            sleep(1_000L);
+
+            PollingParsingStatusDocumentQuery query = PollingParsingStatusDocumentQuery.builder()
+                .id(document.getId())
+                .build();
+
+            PollingParsingStatusDocumentContext pollingContext = PollingParsingStatusDocumentContext.builder()
+                .deployKey(DEPLOY_KEY)
+                .datasetId(dataset.id())
+                .query(query)
+                .build();
+
+            PollingParsingStatusDocumentDTO dto = client.pollingParsingStatus(pollingContext);
+            Assertions.assertTrue(dto.hasParsingCancelled());
+        });
+    }
+
+    //@Test
+    void testPollingParsingStatus() {
+        WebfluxRAGFlowDocumentClient documentClient = new DefaultSyncWebfluxRAGFlowDocumentClient(
+            () -> properties,
+            new RAGFlowWebClientFactory()
+        );
+
+        String datasetId = "2438297ed33b11f0b4dda2b9b5a62a89";
+        String documentId = "24c8f8b4d33b11f09b32a2b9b5a62a89";
+
+        PollingParsingStatusDocumentQuery query = PollingParsingStatusDocumentQuery.builder()
+            .id(documentId)
+            .build();
+
+        PollingParsingStatusDocumentContext context = PollingParsingStatusDocumentContext.builder()
+            .deployKey(DEPLOY_KEY)
+            .datasetId(datasetId)
+            .query(query)
+            .build();
+        PollingParsingStatusDocumentDTO dto = documentClient.pollingParsingStatus(context);
+        Assertions.assertTrue(dto.hasParsingFinished());
+    }
+
 }

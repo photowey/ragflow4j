@@ -13,53 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.context.document;
 
-import java.io.Serializable;
-import java.util.List;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
+import io.github.photowey.ai.ragflow.core.domain.context.AbstractContext;
+import io.github.photowey.ai.ragflow.core.domain.query.document.PollingParsingStatusDocumentQuery;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 /**
- * List documents.
+ * {@code PollingParsingStatusDocumentContext}.
  *
  * @author photowey
  * @version 2025.0.22.0.1
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#list-documents">List documents</a>
- * @since 2025/11/26
+ * @since 2025/12/07
  */
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ListDocumentDTO extends MetadataDTO implements Serializable {
+public class PollingParsingStatusDocumentContext extends AbstractContext {
 
-    private static final long serialVersionUID = 6684713032831363409L;
+    private static final long serialVersionUID = 6963288387325604082L;
 
-    @JsonProperty("total")
-    private Long total;
-
-    @JsonProperty("docs")
-    private List<DocumentDTO> documents;
-
-    // ----------------------------------------------------------------
-
-    public Long total() {
-        return total;
-    }
-
-    public List<DocumentDTO> documents() {
-        return documents;
-    }
+    @Valid
+    @NotNull(message = "Query must not be null")
+    private PollingParsingStatusDocumentQuery query;
 }
