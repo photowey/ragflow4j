@@ -41,7 +41,7 @@ import java.io.OutputStream;
  * {@code InputStream} **must be closed** by the caller to ensure proper resource release.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @since 2025/12/06
  */
 public interface DownloadHandle extends AutoCloseable {

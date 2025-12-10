@@ -26,7 +26,7 @@ import io.github.photowey.ai.ragflow.core.domain.query.document.ListDocumentQuer
  * {@code QueryParamBuilder}.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @since 2025/11/26
  */
 public final class QueryParamBuilder {

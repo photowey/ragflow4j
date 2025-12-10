@@ -26,7 +26,7 @@ import io.github.photowey.ai.ragflow.core.domain.download.DownloadMetadata;
  * {@code ErrorDownloadHandle}.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @since 2025/12/06
  */
 public class ErrorDownloadHandle implements DownloadHandle {

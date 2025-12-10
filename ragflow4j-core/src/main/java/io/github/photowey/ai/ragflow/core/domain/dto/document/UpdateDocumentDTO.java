@@ -30,7 +30,7 @@ import lombok.EqualsAndHashCode;
  * Update document.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#update-document">Update document</a>
  * @since 2025/11/26
  */

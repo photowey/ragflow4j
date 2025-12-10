@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
  * Delete knowledge graph.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#delete-knowledge-graph">Delete knowledge graph</a>
  * @since 2025/11/29
  */

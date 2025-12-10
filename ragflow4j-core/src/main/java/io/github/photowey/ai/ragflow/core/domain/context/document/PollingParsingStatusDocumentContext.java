@@ -32,7 +32,7 @@ import lombok.experimental.SuperBuilder;
  * {@code PollingParsingStatusDocumentContext}.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#list-documents">List documents</a>
  * @since 2025/12/07
  */

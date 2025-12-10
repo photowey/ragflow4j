@@ -21,7 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * {@code WebClientBuilderCustomizer}.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @since 2025/12/06
  */
 @FunctionalInterface

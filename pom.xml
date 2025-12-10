@@ -59,13 +59,13 @@
 
         <!--
           Version format: yyyy.RAGFlow.Client-SNAPSHOT
-            -           : 2025|0.22.0|1
+            -           : 2025|0.22.1|1
             - yyyy      : Current year (e.g., 2025)
             - RAGFlow   : RAGFlow version
             - Client    : Client version
             - SNAPSHOT  : Indicates a development build (not a stable release)
         -->
-        <reversion>2025.0.22.0.1-SNAPSHOT</reversion>
+        <reversion>2025.0.22.1.1-SNAPSHOT</reversion>
         <io.github.photowey.project.url>https://github.com/photowey/ragflow4j</io.github.photowey.project.url>
 
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>

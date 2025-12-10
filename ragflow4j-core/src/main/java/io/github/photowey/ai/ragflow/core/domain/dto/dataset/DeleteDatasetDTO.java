@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
  * Delete datasets.
  *
  * @author photowey
- * @version 2025.0.22.0.1
+ * @version 2025.0.22.1.1
  * @since 2025/11/26
  * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#delete-datasets">Delete datasets</a>
  */
