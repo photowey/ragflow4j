@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.query.chunk;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.photowey.ai.ragflow.core.domain.query.AbstractPaginationQuery;
 
-import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-// @formatter:off
+import lombok.experimental.SuperBuilder;
 
 /**
- * Update document.
+ * {@code ListChunkQuery}.
  *
  * @author photowey
  * @version 2025.0.22.1.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#update-document">Update document</a>
- * @since 2025/11/26
+ * @since 2026/01/03
  */
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@SuperBuilder
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UpdateDocumentDTO extends MetadataDTO { }
+public class ListChunkQuery extends AbstractPaginationQuery {
 
-// @formatter:on
+    private static final long serialVersionUID = -4901696779011269879L;
+}

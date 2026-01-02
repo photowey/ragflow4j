@@ -13,28 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.util.List;
 
-import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-// @formatter:off
+import lombok.NoArgsConstructor;
 
 /**
- * Update document.
+ * {@code MetadataCondition}.
  *
  * @author photowey
  * @version 2025.0.22.1.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#update-document">Update document</a>
- * @since 2025/11/26
+ * @since 2026/01/02
  */
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode(callSuper = true)
-public class UpdateDocumentDTO extends MetadataDTO { }
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MetadataCondition implements Serializable {
 
-// @formatter:on
+    private static final long serialVersionUID = 6677707539172125707L;
+
+    private List<Condition> conditions;
+
+    // ----------------------------------------------------------------
+
+    public List<Condition> conditions() {
+        return conditions;
+    }
+}

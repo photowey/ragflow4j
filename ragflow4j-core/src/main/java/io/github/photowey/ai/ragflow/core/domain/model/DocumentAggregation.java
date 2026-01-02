@@ -13,55 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.model;
 
-import java.util.Objects;
+import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
-import io.github.photowey.ai.ragflow.core.enums.RAGFlowDictionary;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Download document.
+ * {@code DocumentAggregation}.
  *
  * @author photowey
  * @version 2025.0.22.1.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#download-document">Download document</a>
- * @since 2025/11/30
+ * @since 2026/01/02
  */
-@Deprecated
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@SuppressWarnings("all")
-public class DownloadDocumentDTO extends MetadataDTO {
+public class DocumentAggregation implements Serializable {
 
-    private static final long serialVersionUID = 1827453946696218990L;
+    private static final long serialVersionUID = 8288205137993652762L;
 
-    private Integer code;
-    private String message;
-
-    private String filename;
-    private byte[] data;
+    @JsonProperty("count")
+    private Integer count;
+    @JsonProperty("doc_id")
+    private String documentId;
+    @JsonProperty("doc_name")
+    private String documentName;
 
     // ----------------------------------------------------------------
 
-    public boolean determineIsOk() {
-        if (Objects.isNull(this.code)) {
-            return false;
-        }
-
-        return RAGFlowDictionary.ErrorCode.determineIsOk(this.code);
+    public Integer count() {
+        return count;
     }
 
+    public String documentId() {
+        return documentId;
+    }
+
+    public String documentName() {
+        return documentName;
+    }
 }

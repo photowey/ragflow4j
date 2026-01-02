@@ -46,4 +46,9 @@ public interface MessageConstants {
     // ----------------------------------------------------------------
 
     String POLLING_PARSING_STATUS_FAILED = "The document ID (%s) is invalid.";
+
+    // ----------------------------------------------------------------
+
+    String LIST_CHUNK_FAILED = "Failed to list chunks: ";
+    String RETRIEVE_CHUNK_FAILED = "Failed to retrieve chunks: ";
 }

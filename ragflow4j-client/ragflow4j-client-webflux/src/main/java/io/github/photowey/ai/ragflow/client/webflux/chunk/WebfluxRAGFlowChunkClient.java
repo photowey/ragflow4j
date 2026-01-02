@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.client.webflux.chunk;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import io.github.photowey.ai.ragflow.client.api.RAGFlowChunkClient;
 
 // @formatter:off
 
 /**
- * Update document.
+ * {@code WebfluxRAGFlowChunkClient}.
  *
  * @author photowey
  * @version 2025.0.22.1.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#update-document">Update document</a>
- * @since 2025/11/26
+ * @since 2026/01/02
  */
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode(callSuper = true)
-public class UpdateDocumentDTO extends MetadataDTO { }
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
+public interface WebfluxRAGFlowChunkClient extends RAGFlowChunkClient { }
 
 // @formatter:on

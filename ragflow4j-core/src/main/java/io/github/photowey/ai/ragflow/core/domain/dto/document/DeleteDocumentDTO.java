@@ -15,8 +15,6 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.dto.document;
 
-import java.io.Serializable;
-
 import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 
 import lombok.Data;
@@ -34,6 +32,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DeleteDocumentDTO extends MetadataDTO implements Serializable { }
+public class DeleteDocumentDTO extends MetadataDTO { }
 
 // @formatter:on

@@ -45,7 +45,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class KnowledgeGraphDTO extends MetadataDTO implements Serializable {
+public class KnowledgeGraphDTO extends MetadataDTO {
 
     private static final long serialVersionUID = -2675243353079780187L;
 

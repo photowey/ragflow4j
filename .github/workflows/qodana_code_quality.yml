@@ -9,8 +9,8 @@ on:
   pull_request:
   push:
     branches:
-      - dev
       - main
+      - dev
       - feature/wcj
 
 jobs:
@@ -26,7 +26,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2025.3
+        # https://github.com/JetBrains/qodana-action/releases
+        # v2025.3
+        uses: JetBrains/qodana-action@v2025.2.4
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:

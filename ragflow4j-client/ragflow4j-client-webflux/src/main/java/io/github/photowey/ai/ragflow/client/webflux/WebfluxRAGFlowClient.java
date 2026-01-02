@@ -16,6 +16,7 @@
 package io.github.photowey.ai.ragflow.client.webflux;
 
 import io.github.photowey.ai.ragflow.client.api.RAGFlowClient;
+import io.github.photowey.ai.ragflow.client.webflux.chunk.WebfluxRAGFlowChunkClient;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
 import io.github.photowey.ai.ragflow.client.webflux.document.WebfluxRAGFlowDocumentClient;
 
@@ -44,5 +45,13 @@ public interface WebfluxRAGFlowClient extends RAGFlowClient {
      */
     @Override
     WebfluxRAGFlowDocumentClient document();
+
+    /**
+     * Get the chunk client {@link WebfluxRAGFlowChunkClient} instance.
+     *
+     * @return {@link WebfluxRAGFlowChunkClient}
+     */
+    @Override
+    WebfluxRAGFlowChunkClient chunk();
 }
 

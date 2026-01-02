@@ -38,4 +38,11 @@ public interface RAGFlowClient {
      * @return {@link RAGFlowDocumentClient}
      */
     RAGFlowDocumentClient document();
+
+    /**
+     * Get the chunk client {@link RAGFlowChunkClient} instance.
+     *
+     * @return {@link RAGFlowChunkClient}
+     */
+    RAGFlowChunkClient chunk();
 }

@@ -15,10 +15,13 @@
  */
 package io.github.photowey.ai.ragflow.client.webflux.core.builder;
 
+import java.util.Objects;
+
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import io.github.photowey.ai.ragflow.core.domain.query.AbstractPaginationQuery;
+import io.github.photowey.ai.ragflow.core.domain.query.chunk.ListChunkQuery;
 import io.github.photowey.ai.ragflow.core.domain.query.dataset.ListDatasetQuery;
 import io.github.photowey.ai.ragflow.core.domain.query.document.ListDocumentQuery;
 
@@ -70,33 +73,59 @@ public final class QueryParamBuilder {
         return params;
     }
 
-    private static MultiValueMap<String, String> toPaginationQueryParams(AbstractPaginationQuery query) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    public static MultiValueMap<String, String> toQueryParams(ListChunkQuery query) {
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        if (Objects.isNull(query)) {
+            return parameters;
+        }
 
         if (query.getPage() != null && query.getPage() > 0) {
-            params.add("page", query.getPage().toString());
+            parameters.add("page", query.getPage().toString());
         }
         if (query.getPageSize() != null && query.getPageSize() > 0) {
-            params.add("page_size", query.getPageSize().toString());
-        }
-        if (query.getOrderby() != null) {
-            params.add("orderby", query.getOrderby());
-        }
-        if (query.getDesc() != null) {
-            params.add("desc", query.getDesc().toString());
-        }
-
-        if (query.getId() != null) {
-            params.add("id", query.getId());
-        }
-        if (query.getName() != null) {
-            params.add("name", query.getName());
+            parameters.add("page_size", query.getPageSize().toString());
         }
 
         if (query.getKeywords() != null) {
-            params.add("keywords", query.getKeywords());
+            parameters.add("keywords", query.getKeywords());
+        }
+        if (query.getId() != null) {
+            parameters.add("id", query.getId());
         }
 
-        return params;
+        return parameters;
+    }
+
+    private static MultiValueMap<String, String> toPaginationQueryParams(AbstractPaginationQuery query) {
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        if (Objects.isNull(query)) {
+            return parameters;
+        }
+
+        if (query.getPage() != null && query.getPage() > 0) {
+            parameters.add("page", query.getPage().toString());
+        }
+        if (query.getPageSize() != null && query.getPageSize() > 0) {
+            parameters.add("page_size", query.getPageSize().toString());
+        }
+        if (query.getOrderby() != null) {
+            parameters.add("orderby", query.getOrderby());
+        }
+        if (query.getDesc() != null) {
+            parameters.add("desc", query.getDesc().toString());
+        }
+
+        if (query.getId() != null) {
+            parameters.add("id", query.getId());
+        }
+        if (query.getName() != null) {
+            parameters.add("name", query.getName());
+        }
+
+        if (query.getKeywords() != null) {
+            parameters.add("keywords", query.getKeywords());
+        }
+
+        return parameters;
     }
 }

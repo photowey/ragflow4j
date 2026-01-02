@@ -15,6 +15,7 @@
  */
 package io.github.photowey.ai.ragflow.client.webflux;
 
+import io.github.photowey.ai.ragflow.client.webflux.chunk.WebfluxRAGFlowChunkClient;
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
 import io.github.photowey.ai.ragflow.client.webflux.document.WebfluxRAGFlowDocumentClient;
@@ -33,9 +34,10 @@ public class DefaultWebfluxRAGFlowClient extends DefaultSyncWebfluxRAGFlowClient
     public DefaultWebfluxRAGFlowClient(
         WebfluxRAGFlowDatasetClient dataset,
         WebfluxRAGFlowDocumentClient document,
+        WebfluxRAGFlowChunkClient chunk,
         /* ---------------------------------------------------------------- */
         RAGFlowPropertiesGetter getter,
         RAGFlowWebClientFactory factory) {
-        super(dataset, document, getter, factory);
+        super(dataset, document, chunk, getter, factory);
     }
 }

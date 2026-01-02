@@ -13,52 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.model;
 
-import java.util.List;
+import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * List documents.
+ * {@code Condition}.
  *
  * @author photowey
  * @version 2025.0.22.1.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#list-documents">List documents</a>
- * @since 2025/11/26
+ * @since 2026/01/02
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ListDocumentDTO extends MetadataDTO {
+public class Condition implements Serializable {
 
-    private static final long serialVersionUID = 6684713032831363409L;
+    private static final long serialVersionUID = 9128289949807095427L;
 
-    @JsonProperty("total")
-    private Long total;
-
-    @JsonProperty("docs")
-    private List<DocumentDTO> documents;
+    private String name;
+    /**
+     * The comparison operator.
+     * <pre>
+     * The comparison operator. Can be one of:
+     *   - `"contains"`
+     *   - `"not contains"`
+     *   - `"start with"`
+     *   - `"empty"`
+     *   - `"not empty"`
+     *   - `"="`
+     *   - `"≠"`
+     *   - `">"`
+     *   - `"<"`
+     *   - `"≥"`
+     *   - `"≤"`
+     * </pre>
+     */
+    @JsonProperty("comparison_operator")
+    private String comparisonOperator;
+    private String value;
 
     // ----------------------------------------------------------------
 
-    public Long total() {
-        return total;
+    public String name() {
+        return name;
     }
 
-    public List<DocumentDTO> documents() {
-        return documents;
+    public String comparisonOperator() {
+        return comparisonOperator;
+    }
+
+    public String value() {
+        return value;
     }
 }

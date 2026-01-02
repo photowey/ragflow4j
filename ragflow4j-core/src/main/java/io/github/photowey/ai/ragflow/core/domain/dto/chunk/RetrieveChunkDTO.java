@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.photowey.ai.ragflow.core.domain.dto.document;
+package io.github.photowey.ai.ragflow.core.domain.dto.chunk;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.github.photowey.ai.ragflow.core.domain.dto.MetadataDTO;
-import io.github.photowey.ai.ragflow.core.domain.model.ParserConfig;
+import io.github.photowey.ai.ragflow.core.domain.model.DocumentAggregation;
+import io.github.photowey.ai.ragflow.core.domain.model.RetrieveChunk;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,12 +31,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Upload documents.
+ * Retrieve chunks.
  *
  * @author photowey
  * @version 2025.0.22.1.1
- * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#upload-documents">Upload documents</a>
- * @since 2025/11/26
+ * @see <a href="https://ragflow.io/docs/v0.22.1/http_api_reference#retrieve-chunks">Retrieve chunks</a>
+ * @since 2026/01/02
  */
 @Data
 @Builder
@@ -41,42 +44,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UploadDocumentDTO extends MetadataDTO {
+public class RetrieveChunkDTO extends MetadataDTO {
 
-    private static final long serialVersionUID = -3718360920182426815L;
+    private static final long serialVersionUID = 352124429600249171L;
 
-    @JsonProperty("chunk_method")
-    private String chunkMethod;
+    @JsonProperty("chunks")
+    private List<RetrieveChunk> chunks;
+    @JsonProperty("doc_aggs")
+    private List<DocumentAggregation> docAggs;
+    @JsonProperty("total")
+    private Integer total;
 
-    @JsonProperty("created_by")
-    private String createdBy;
+    // ----------------------------------------------------------------
 
-    @JsonProperty("dataset_id")
-    private String datasetId;
+    public List<RetrieveChunk> chunks() {
+        return chunks;
+    }
 
-    @JsonProperty("id")
-    private String id;
+    public List<DocumentAggregation> docAggs() {
+        return docAggs;
+    }
 
-    @JsonProperty("location")
-    private String location;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("parser_config")
-    private ParserConfig parserConfig;
-
-    @JsonProperty("run")
-    private String run;
-
-    @JsonProperty("size")
-    private Long size;
-
-    @JsonProperty("thumbnail")
-    private String thumbnail;
-
-    @JsonProperty("type")
-    private String type;
+    public Integer total() {
+        return total;
+    }
 }
-
-

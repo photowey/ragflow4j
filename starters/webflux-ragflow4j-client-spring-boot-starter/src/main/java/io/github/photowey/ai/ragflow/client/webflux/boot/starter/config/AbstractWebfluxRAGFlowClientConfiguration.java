@@ -25,6 +25,8 @@ import org.springframework.core.env.Environment;
 import io.github.photowey.ai.ragflow.client.starter.binder.PropertyBinders;
 import io.github.photowey.ai.ragflow.client.webflux.DefaultWebfluxRAGFlowClient;
 import io.github.photowey.ai.ragflow.client.webflux.SyncWebfluxRAGFlowClient;
+import io.github.photowey.ai.ragflow.client.webflux.chunk.DefaultSyncWebfluxRAGFlowChunkClient;
+import io.github.photowey.ai.ragflow.client.webflux.chunk.WebfluxRAGFlowChunkClient;
 import io.github.photowey.ai.ragflow.client.webflux.core.factory.RAGFlowWebClientFactory;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.DefaultSyncWebfluxRAGFlowDatasetClient;
 import io.github.photowey.ai.ragflow.client.webflux.dataset.WebfluxRAGFlowDatasetClient;
@@ -92,6 +94,15 @@ public abstract class AbstractWebfluxRAGFlowClientConfiguration implements BeanF
         );
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public WebfluxRAGFlowChunkClient chunkClient() {
+        return new DefaultSyncWebfluxRAGFlowChunkClient(
+            this.ragflowPropertiesGetter(),
+            this.ragflowWebClientFactory()
+        );
+    }
+
     @Bean("syncWebfluxRAGFlowClient")
     @ConditionalOnMissingBean(name = "syncWebfluxRAGFlowClient")
     @SuppressWarnings("all")
@@ -99,6 +110,7 @@ public abstract class AbstractWebfluxRAGFlowClientConfiguration implements BeanF
         return new DefaultWebfluxRAGFlowClient(
             this.datasetClient(),
             this.documentClient(),
+            this.chunkClient(),
             this.ragflowPropertiesGetter(),
             this.ragflowWebClientFactory()
         );

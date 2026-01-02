@@ -15,7 +15,6 @@
  */
 package io.github.photowey.ai.ragflow.core.domain.dto.dataset;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -82,7 +81,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CreateDatasetDTO extends MetadataDTO implements Serializable {
+public class CreateDatasetDTO extends MetadataDTO {
 
     private static final long serialVersionUID = -8675006386255012387L;
 
