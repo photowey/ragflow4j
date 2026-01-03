@@ -51,10 +51,10 @@ public class Condition implements Serializable {
      *   - `"not empty"`
      *   - `"="`
      *   - `"≠"`
-     *   - `">"`
-     *   - `"<"`
-     *   - `"≥"`
-     *   - `"≤"`
+     *   - `"&gt;"`
+     *   - `"&lt;"`
+     *   - `"&gt;="`
+     *   - `"&lt;="`
      * </pre>
      */
     @JsonProperty("comparison_operator")
